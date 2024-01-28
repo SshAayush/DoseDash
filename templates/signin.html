@@ -1,0 +1,75 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <title>Sign in</title>
+    <meta name="description" content="" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="stylesheet" href="{% static 'css/signup.css' %}" />
+
+    <link
+    rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw=="
+    crossorigin="anonymous"
+    referrerpolicy="no-referrer"
+  />
+  </head>
+  <body>
+    <nav class="navbar">
+        <div class="logo">
+            <a href="#">Your Logo</a>
+        </div>
+        <ul class="nav-links">
+            <li><a href="{% url 'landingPage' %}">Home</a></li>
+            <li><a href="#about">About</a></li>
+            <li><a href="#services">Services</a></li>
+            <li><a href="#contact">Contact</a></li>
+        </ul>
+        <div class="sign-in">
+            <a href="{% url 'signup' %}">Sign Up</a>
+        </div>
+        <div class="burger-menu">&#9776;</div>
+    </nav>
+    <div class="container">
+      <div class="form-box">
+        <h2 class="heading">login</h2>
+        <p class="error">{{ message }}</p>
+        <form action="{% url 'signin' %}" method="post" class="form" id="form">
+          {% csrf_token %}
+          <input
+            type="text"
+            name="username"
+            id="username"
+            placeholder="Username"
+          />
+          <br />
+
+          <input
+            type="password"
+            class="password"
+            id="password"
+            name="password"
+            placeholder="Password"
+          />
+          <i class="fa-regular fa-eye show-pass"></i>
+          <br />
+          <div class="submit">
+            <input
+              class="btn-submit"
+              type="submit"
+              name="submit"
+              value="Submit"
+            />
+          </div>
+        </form>
+        {% comment %} <p class="f-pass">
+          <a href="{% url 'forget_pass' %}">Forget password?</a>
+        </p> {% endcomment %}
+      </div>
+    </div>
+    <script src="../static/js/validate.js"></script>
+  </body>
+</html>
