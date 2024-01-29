@@ -46,13 +46,11 @@
               </li>
               
               <li class="nav-item">
-                <a class="nav-link me-4" aria-current="page" href="#">Sign In</a>
+                <a class="nav-link me-4" aria-current="page" href="{% url "signin" %}">Sign In</a>
               </li>
           </div>
         </div>
       </nav>
-
-    <!-- footer -->
 
       <section id="home">
         <div class="container">
@@ -63,6 +61,32 @@
         </div>
       </section>
 
+      <section id = "new" class="w-100">
+        <div class="row p-0 m-0">
+          <div class="one col-lg-4 col-md-12 col-12 p-0">
+            <img class = "img-fluid" src="{% static 'image/1.jpg' %}" alt="One">
+            <div class="details">
+              <h2>Rare Med. Aiv</h2>
+              <button class="text-uppercase">Shop Now</button>
+            </div>
+          </div>
+
+          <div class="one col-lg-4 col-md-12 col-12 p-0">
+            <img class = "img-fluid" src="{% static 'image/2.jpg' %}" alt="One">
+            <div class="details">
+              <h2>Get Reminder</h2>
+              <button class="text-uppercase">Shop Now</button>
+            </div>
+
+          </div><div class="one col-lg-4 col-md-12 col-12 p-0">
+            <img class = "img-fluid" src="{% static 'image/3.jpg' %}" alt="One">
+            <div class="details">
+              <h2>24x7 Service</h2>
+              <button class="text-uppercase">Shop Now</button>
+            </div>
+          </div>
+        </div>
+      </section>
     <!-- <footer>
         <div class="footer-content">
             <div class="footer-logo">
