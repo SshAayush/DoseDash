@@ -48,6 +48,9 @@ def signin(request):
             return render(request, "signin.html", {'message': msg})
     return render(request, 'signin.html', {})
 
+def shop(request):
+    return render(request, "shop.html", {})
+
 def logOut(request):
     logout(request)
     return redirect('landingPage')

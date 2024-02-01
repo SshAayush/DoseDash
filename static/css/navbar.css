@@ -76,3 +76,10 @@ button:hover{
   }
 }
 
+/* #navbarSupportedContent > ul > li:nth-child(1) > a{
+  color: #217288;
+} */
+
+.selected{
+  color: #217288;
+}

@@ -1,0 +1,66 @@
+@import url("/static/css/navbar.css");
+@import url("/static/css/footer.css");
+@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@100;200;300;400;500;600;700;800;900&display=swap");
+
+/* Products */
+
+.product{
+    cursor: pointer;
+    margin-bottom: 2rem;
+}
+
+.product img{
+    width: 100%;
+    height: auto;
+    box-sizing: border-box;
+    object-fit: cover;
+    transition: 0.3s all;
+
+}
+
+.product:hover img{
+    opacity: 0.7;
+}
+
+.product .buy-btn{
+    background: #0b3b47;
+    transform: translateY(20px);
+    opacity: 0;
+    transition: 0.3s all;
+}
+
+.product:hover .buy-btn{
+    transform: translateY(0);
+    opacity: 1;
+}
+
+button{
+    font-size: 0.8rem;
+    font-weight: 700;
+    outline: none;
+    border: none;
+    background-color: #1d1d1d;
+    color: aliceblue;
+    padding: 13px 30px;
+    cursor: pointer;
+    text-transform: uppercase;
+    transition: 0.3s ease;
+}
+
+body > nav:nth-child(3) > ul > li.page-item.active > a{
+    background-color: black;
+}
+
+body > nav:nth-child(3) > ul > li:nth-child(n):hover>a{
+    background-color: #0b3b47;
+    color: white;
+}
+
+.pagination a{
+    color: #000;
+}
+
+/* #navbarSupportedContent > ul > li:nth-child(2) > a{
+
+    color: #217288;
+} */
