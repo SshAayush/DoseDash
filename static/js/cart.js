@@ -19,16 +19,16 @@ function changeTotal() {
   });
   
   price = Math.round(price * 100) / 100;
-  var tax = Math.round(price * 0.05 * 100) / 100
+  // var tax = Math.round(price * 0.05 * 100) / 100
   var shipping = parseFloat($(".shipping span").html());
-  var fullPrice = Math.round((price + tax + shipping) *100) / 100;
+  var fullPrice = Math.round((price + shipping) *100) / 100;
   
   if(price == 0) {
     fullPrice = 0;
   }
   
   $(".subtotal span").html(price);
-  $(".tax span").html(tax);
+  // $(".tax span").html(tax);
   $(".total span").html(fullPrice);
 }
 
@@ -54,13 +54,21 @@ $(document).ready(function(){
   });
   
   $(".qt-plus").click(function(){
-    $(this).parent().children(".qt").html(parseInt($(this).parent().children(".qt").html()) + 1);
+    var currentQuantity = parseInt($(this).parent().children(".qt").html());
     
-    $(this).parent().children(".full-price").addClass("added");
-    
-    var el = $(this);
-    window.setTimeout(function(){el.parent().children(".full-price").removeClass("added"); changeVal(el);}, 150);
-  });
+    // Check if the current quantity is less than 20 before incrementing
+    if (currentQuantity < 20) {
+        $(this).parent().children(".qt").html(currentQuantity + 1);
+
+        $(this).parent().children(".full-price").addClass("added");
+
+        var el = $(this);
+        window.setTimeout(function(){el.parent().children(".full-price").removeClass("added"); changeVal(el);}, 150);
+    } else {
+        // If quantity is already 20, display a message or perform another action
+        alert("You can only add up to 20 items.");
+    }
+});
   
   $(".qt-minus").click(function(){
     
@@ -78,7 +86,7 @@ $(document).ready(function(){
   
   window.setTimeout(function(){$(".is-open").removeClass("is-open")}, 1200);
   
-  $(".btn").click(function(){
+  $(".bth-checkout").click(function(){
     check = true;
     $(".remove").click();
   });

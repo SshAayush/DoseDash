@@ -60,6 +60,9 @@ def product(request,pk):
     return render (request, "product.html", {
         'product': prodct,
     })
+    
+def cart(request):
+    return render(request, "cart.html", {})
 
 def logOut(request):
     logout(request)
