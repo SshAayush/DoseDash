@@ -1,4 +1,5 @@
 {% load static %}
+{% load mathfilters %}
 <!DOCTYPE html>
 <html lang="en">
   <head>
@@ -37,7 +38,7 @@
               </li>
               <li class="nav-item">
                 <i class="fa-solid fa-magnifying-glass me-4"></i>
-                <i class="fa-solid fa-cart-shopping me-4"></i>
+                <a href= "{% url 'cart' %}"><i class="fa-solid fa-cart-shopping me-4"></i></a>
               </li>
               
               <li class="nav-item">
@@ -54,10 +55,11 @@
 	<div class="container">
 
 		<section id="cart" class="container sproduct my-5 pt-5"> 
+			{% for cart in carts %}
 			<article class="product">
 				<header>
 					<a class="remove">
-						<img src="./img/mouse.jpg" alt="Gamming Mouse">
+						<img src="/{{ cart.Cart_Details.Product_Image }}">
 
 						<h3>Remove product</h3>
 					</a>
@@ -65,25 +67,27 @@
 
 				<div class="content">
 
-					<h1>Mouse</h1>
+					<h1>{{ cart.Cart_Details.Product_Name }}</h1>
 
-					Lorem ipsum dolor sit amet, consectetur adipisicing elit. Soluta, numquam quis perspiciatis ea ad omnis provident laborum dolore in atque.
+					{{ cart.Cart_Details.Product_Description }}
+
 				</div>
 
 				<footer class="content">
 					<span class="qt-minus">-</span>
-					<span class="qt">2</span>
+					<span class="qt">{{ cart.Cart_Quantity }}</span>
 					<span class="qt-plus">+</span>
 
 					<h2 class="full-price">
-						29.98€
+						Rs.{{ cart.Cart_Details.Product_Price|mul:cart.Cart_Quantity }}
 					</h2>
 
 					<h2 class="price">
-						14.99€
+						{{ cart.Cart_Details.Product_Price  }}
 					</h2>
 				</footer>
 			</article>
+			{% endfor %}
 
 		</section>
 
@@ -93,12 +97,12 @@
 		<div class="container clearfix">
 
 			<div class="left">
-				<h2 class="subtotal">Subtotal: <span>163.96</span>€</h2>
-				<h3 class="shipping">Shipping: <span>5.00</span>€</h3>
+				<h2 class="subtotal">Subtotal: Rs.<span>{{ subTotal }}</span></h2>
+				<h3 class="shipping">Shipping: Rs.<span>10</span></h3>
 			</div>
 
 			<div class="right">
-				<h1 class="total">Total: <span>177.16</span>€</h1>
+				<h1 class="total">Total: <span>Rs.{{ subTotal|addition:10 }}</span></h1>
 				<a class="bth-checkout">Checkout</a>
 			</div>
 

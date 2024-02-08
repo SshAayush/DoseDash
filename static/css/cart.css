@@ -366,3 +366,8 @@ a:hover {
 .added {
 	margin: 0 -50px 0 0 !important;
 }
+
+#navbarSupportedContent > ul > li:nth-child(4) > i.fa-solid.fa-cart-shopping.me-4{
+
+    color: #217288;
+}

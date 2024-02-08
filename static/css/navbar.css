@@ -83,3 +83,8 @@ button:hover{
 .selected{
   color: #217288;
 }
+
+a {
+  text-decoration: none; /* Removes the underline */
+  color: inherit; /* Inherits the color from its parent element */
+}

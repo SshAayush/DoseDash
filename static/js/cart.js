@@ -10,27 +10,47 @@ function changeVal(el) {
   changeTotal();			
 }
 
+// function changeTotal() {
+  
+//   var price = 0;
+  
+//   $(".full-price").each(function(index){
+//     price += parseFloat($(".full-price").eq(index).html());
+//   });
+  
+//   price = Math.round(price * 100) / 100;
+//   // var tax = Math.round(price * 0.05 * 100) / 100
+//   var shipping = parseFloat($(".shipping span").html());
+//   var fullPrice = Math.round((price + shipping) *100) / 100;
+  
+//   if(price == 0) {
+//     fullPrice = 0;
+//   }
+  
+//   $(".subtotal span").html(price);
+//   // $(".tax span").html(tax);
+//   $(".total span").html(fullPrice);
+// }
+
+
 function changeTotal() {
-  
-  var price = 0;
-  
-  $(".full-price").each(function(index){
-    price += parseFloat($(".full-price").eq(index).html());
+  var totalPrice = 0;
+
+  $(".product").each(function(index, product){
+      var price = parseFloat($(product).find(".price").html());
+      var quantity = parseInt($(product).find(".qt").html());
+      var productTotalPrice = price * quantity;
+      totalPrice += productTotalPrice;
+      $(product).find(".full-price").html(productTotalPrice.toFixed(2));
   });
-  
-  price = Math.round(price * 100) / 100;
-  // var tax = Math.round(price * 0.05 * 100) / 100
-  var shipping = parseFloat($(".shipping span").html());
-  var fullPrice = Math.round((price + shipping) *100) / 100;
-  
-  if(price == 0) {
-    fullPrice = 0;
-  }
-  
-  $(".subtotal span").html(price);
-  // $(".tax span").html(tax);
-  $(".total span").html(fullPrice);
+
+  var shipping = 10; // Assuming shipping cost is fixed at Rs. 10
+  var fullPrice = totalPrice + shipping;
+
+  $(".subtotal span").html(totalPrice.toFixed(2));
+  $(".total span").html(fullPrice.toFixed(2));
 }
+
 
 $(document).ready(function(){
   
