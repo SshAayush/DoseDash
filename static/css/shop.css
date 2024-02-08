@@ -60,7 +60,11 @@ body > nav:nth-child(3) > ul > li:nth-child(n):hover>a{
     color: #000;
 }
 
-/* #navbarSupportedContent > ul > li:nth-child(2) > a{
+#navbarSupportedContent > ul > li:nth-child(2) > a{
 
     color: #217288;
-} */
+}
+
+a {
+    text-decoration: none;
+}

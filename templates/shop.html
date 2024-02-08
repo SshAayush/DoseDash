@@ -42,7 +42,11 @@
                   </li>
                   
                   <li class="nav-item">
+                    {% if request.user.is_authenticated %}
+                    <a class="nav-link me-4" aria-current="page" href="{% url "logout" %}">Log Out</a>
+                    {% else %}
                     <a class="nav-link me-4" aria-current="page" href="{% url "signin" %}">Sign In</a>
+                    {% endif %}
                   </li>
               </div>
             </div>
@@ -55,33 +59,14 @@
               <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Facilis quaerat magni voluptatum veniam esse quae veritatis id officiis, magnam ab, ex temporibus commodi quod fugiat culpa expedita dignissimos ipsum reiciendis.</p>
             </div>
             <div class="row mx-auto container">
-              <div class="product text-center col-lg-3 col-md-4 col-12">
-                <img class="img-fluid mb-3" src="{% static 'image/featured/1.jpg' %}" alt="">
-                <h5 class="p-name">Sport Boots</h5>
-                <h4 class="p-price">$192</h4>
-                <button class="buy-btn">Buy Now</button>
+              {% for product in products %}
+              <div onclick="window.location.href='{% url 'product' product.id %}'" class="product text-center col-lg-3 col-md-4 col-12">
+                <img class="img-fluid mb-3" src=/{{ product.Product_Image }} alt="">
+                <h5 class="p-name">{{ product.Product_Name }}</h5>
+                <h4 class="p-price">Rs.{{ product.Product_Price }}</h4>
+                <a href= "{% url 'product' product.id %}"><button class="buy-btn"> Buy Now</button></a>
               </div>
-    
-              <div class="product text-center col-lg-3 col-md-4 col-12">
-                <img class="img-fluid mb-3" src="{% static 'image/featured/2.jpg' %}" alt="">
-                <h5 class="p-name">Sport Boots</h5>
-                <h4 class="p-price">$192</h4>
-                <button class="buy-btn">Buy Now</button>
-              </div>
-    
-              <div class="product text-center col-lg-3 col-md-4 col-12">
-                <img class="img-fluid mb-3" src="{% static 'image/featured/3.jpg' %}" alt="">
-                <h5 class="p-name">Sport Boots</h5>
-                <h4 class="p-price">$192</h4>
-                <button class="buy-btn">Buy Now</button>
-              </div>
-    
-              <div class="product text-center col-lg-3 col-md-4 col-12">
-                <img class="img-fluid mb-3" src="{% static 'image/featured/4.jpg' %}" alt="">
-                <h5 class="p-name">Sport Boots</h5>
-                <h4 class="p-price">$192</h4>
-                <button class="buy-btn">Buy Now</button>
-              </div>
+              {% endfor %}
             </div>
         </section>
 

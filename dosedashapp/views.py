@@ -2,6 +2,8 @@ from django.shortcuts import render
 from django.shortcuts import redirect
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login, logout
+from .models import Product
+
 
 # Create your views here.
 def landingPage(request):
@@ -49,7 +51,15 @@ def signin(request):
     return render(request, 'signin.html', {})
 
 def shop(request):
-    return render(request, "shop.html", {})
+    shop = Product.objects.all()
+    return render(request, "shop.html", {'products' : shop,
+                                         })
+
+def product(request,pk):
+    prodct = Product.objects.get(id = pk)
+    return render (request, "product.html", {
+        'product': prodct,
+    })
 
 def logOut(request):
     logout(request)

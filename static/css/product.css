@@ -1,0 +1,32 @@
+@import url("/static/css/navbar.css");
+@import url("/static/css/footer.css");
+@import url("/static/css/shop.css");
+@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@100;200;300;400;500;600;700;800;900&display=swap");
+
+.small-img-group{
+    display: flex;
+    justify-content: space-between;
+}
+
+.small-img-col{
+    flex-basis: 24%;
+    cursor: pointer;
+}
+
+.sproduct input{
+    width: 50px;
+    height: 40px;
+    padding-left: 10px;
+    font-size: 16px;
+    margin-right: 10px;
+}
+
+.sproduct input:focus{
+    outline: none;
+}
+
+.buy-btn{
+    background-color: #0b3b47;
+    opacity: 1;
+    transition: 0.3s all;
+}
