@@ -10,29 +10,6 @@ function changeVal(el) {
   changeTotal();			
 }
 
-// function changeTotal() {
-  
-//   var price = 0;
-  
-//   $(".full-price").each(function(index){
-//     price += parseFloat($(".full-price").eq(index).html());
-//   });
-  
-//   price = Math.round(price * 100) / 100;
-//   // var tax = Math.round(price * 0.05 * 100) / 100
-//   var shipping = parseFloat($(".shipping span").html());
-//   var fullPrice = Math.round((price + shipping) *100) / 100;
-  
-//   if(price == 0) {
-//     fullPrice = 0;
-//   }
-  
-//   $(".subtotal span").html(price);
-//   // $(".tax span").html(tax);
-//   $(".total span").html(fullPrice);
-// }
-
-
 function changeTotal() {
   var totalPrice = 0;
 

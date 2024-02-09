@@ -86,7 +86,6 @@ def addCart(request):
         user_id = request.user.id
 
         user_id = request.user.id
-        carts = Cart.objects.filter(User_Details = user_id)
         
         product = Product.objects.get(id = product_id)
         
@@ -104,6 +103,17 @@ def addCart(request):
             cart.save()
         
     return redirect('cart')
+
+def removeCart(request,pk):
+    user_id = request.user.id
+    
+    product_id = pk
+    # Assuming each user can have only one cart
+    cart = Cart.objects.filter(User_Details=user_id, Cart_Details=product_id).first()
+    if cart:
+        cart.delete()  # Delete the cart item from the database
+    return redirect('cart')
+
 
 def logOut(request):
     logout(request)
