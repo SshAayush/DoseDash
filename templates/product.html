@@ -49,14 +49,20 @@
                 <h2>Rs.{{ product.Product_Price }}</h2>
 
 
-                <form action="{% url 'addCart' %}" method="POST" id="addcart">
+                {% comment %} <form action="{% url 'addCart' %}" method="POST" id="addcart">
                   {% csrf_token %}
                   <input type="number" name="id" value="{{ product.id }}" hidden/>
                   <!-- <input type="number" name="user_id" value="{{ user_id }}" hidden/> -->
                   <input type="number" name="quantity" value="1"/>
                   <!-- <input type="submit" value="Add To Cart" class="buy-btn" /> -->
                   <button type="submit" class="buy-btn" form="addcart" value="Add To Cart">Add To Cart</button>
-                </form>
+                </form> {% endcomment %}
+                <form action="{% url 'addCart' %}" method="POST" id="addcart">
+                  {% csrf_token %}
+                  <input type="number" name="quantity" value="1"/>
+                  <button type="submit" class="buy-btn">Add To Cart</button>
+              </form>
+
                 <h4 class="mt-5 mb-5">Product Details</h4>
                 <span>{{ product.Product_Description }}</span>
             </div>

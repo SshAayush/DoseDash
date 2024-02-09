@@ -65,23 +65,42 @@
 		<div class="container clearfix">
 
 			<div class="left">
-				<h2 class="subtotal">Subtotal: Rs.<span>{{ subTotal }}</span></h2>
+				<h2 class="subtotal">Subtotal: Rs.<span id="subtotalValue">{{ subTotal }}</span></h2>
 				<h3 class="shipping">Shipping: Rs.<span>10</span></h3>
 			</div>
 
 			<div class="right">
 				<h1 class="total">Total: <span>Rs.{{ subTotal|addition:10 }}</span></h1>
-				<a class="bth-checkout">Checkout</a>
+				
+				<form id="checkout-form" action="{% url 'checkout' %}" method="POST">
+					{% csrf_token %}
+					<input type="hidden" id="subTotalInput" name="subTotal" value="">
+					<!-- Other form fields go here -->
+				</form>
+				<a class="bth-checkout" id="checkoutButton">Checkout</a>
 			</div>
 
 		</div>
 	</div>
  </main>
  
- {% include "footer.html" %}
+	{% include "footer.html" %}
 
-<script src='https://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js'></script>
-<script  src="{% static 'js/cart.js' %}"></script> 
+	<script src='https://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js'></script>
+	<script  src="{% static 'js/cart.js' %}"></script> 
       
+	<script>
+		document.getElementById("checkoutButton").addEventListener("click", function() {
+			// Get the subtotal value
+			var subTotal = document.getElementById("subtotalValue").textContent;
+			
+			
+			// Update the hidden input field value
+			document.getElementById("subTotalInput").value = subTotal;
+			
+			// Submit the form
+			document.getElementById("checkout-form").submit();
+		});
+	</script>
   </body>
 </html>

@@ -85,6 +85,9 @@ $(document).ready(function(){
   
   $(".bth-checkout").click(function(){
     check = true;
-    $(".remove").click();
+    // $(".remove").click(); // probelm....
   });
 });
+
+/*Checkout*/
+ 

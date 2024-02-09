@@ -4,6 +4,8 @@ from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login, logout
 from .models import Product,Cart
 from django.shortcuts import redirect
+from django.contrib.sessions.models import Session
+
 
 
 
@@ -60,6 +62,7 @@ def shop(request):
 def product(request,pk):
     
     user_id = request.user.id
+    request.session['product_id'] = pk
     
     prodct = Product.objects.get(id = pk)
     return render (request, "product.html", {
@@ -80,29 +83,31 @@ def cart(request):
                                          })
 
 def addCart(request):
-    if request.method == "POST":
-        product_id = request.POST["id"]
+     if request.method == "POST":
         quantity = int(request.POST["quantity"])
+        product_id = request.session.get('product_id')  # Retrieve product ID from session
         user_id = request.user.id
 
-        user_id = request.user.id
+        if product_id:
+            product = Product.objects.get(id=product_id)
         
-        product = Product.objects.get(id = product_id)
-        
-        # Check if the product is already in the cart for the current user
-        existing_cart_items = Cart.objects.filter(Cart_Details=product_id, User_Details=user_id)
+            # Check if the product is already in the cart for the current user
+            existing_cart_items = Cart.objects.filter(Cart_Details=product_id, User_Details=user_id)
 
-        if existing_cart_items.exists():
-            # If the product is already in the cart, update the quantity
-            cart_item = existing_cart_items.first()
-            cart_item.Cart_Quantity += quantity  # Increment quantity
-            cart_item.save()
-        else:
-            # If the product is not in the cart, create a new cart item
-            cart = Cart(Cart_Quantity=quantity, Cart_Details=product, User_Details=User.objects.get(id=user_id))
-            cart.save()
+            if existing_cart_items.exists():
+                # If the product is already in the cart, update the quantity
+                cart_item = existing_cart_items.first()
+                cart_item.Cart_Quantity += quantity  # Increment quantity
+                cart_item.save()
+            else:
+                # If the product is not in the cart, create a new cart item
+                cart = Cart(Cart_Quantity=quantity, Cart_Details=product, User_Details=User.objects.get(id=user_id))
+                cart.save()
         
-    return redirect('cart')
+        # Clear the session variable after processing
+        request.session.pop('product_id', None)
+        
+        return redirect('cart')
 
 def removeCart(request,pk):
     user_id = request.user.id
@@ -114,6 +119,11 @@ def removeCart(request,pk):
         cart.delete()  # Delete the cart item from the database
     return redirect('cart')
 
+def checkout(request):
+    if request.method == "POST":
+        subTotal = request.POST["subTotal"]
+        print("subTotal: ", subTotal)
+    return render(request, "checkout.html", {})
 
 def logOut(request):
     logout(request)
