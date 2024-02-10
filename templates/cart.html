@@ -74,7 +74,10 @@
 				
 				<form id="checkout-form" action="{% url 'checkout' %}" method="POST">
 					{% csrf_token %}
+
+					<input type="hidden" id="uuid" name="uuid" value="{{ uuid }}">
 					<input type="hidden" id="subTotalInput" name="subTotal" value="">
+					<input type="hidden" id="return_url" name="return_url" value="{% url 'success' %}">
 					<!-- Other form fields go here -->
 				</form>
 				<a class="bth-checkout" id="checkoutButton">Checkout</a>
@@ -93,7 +96,6 @@
 		document.getElementById("checkoutButton").addEventListener("click", function() {
 			// Get the subtotal value
 			var subTotal = document.getElementById("subtotalValue").textContent;
-			
 			
 			// Update the hidden input field value
 			document.getElementById("subTotalInput").value = subTotal;

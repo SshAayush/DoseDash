@@ -19,3 +19,13 @@ class Cart(models.Model):
     
     def __str__(self):
         return self.Cart_Details.Product_Name
+    
+class Transaction(models.Model):
+    Transaction_ID = models.CharField(max_length = 200)
+    Transaction_Amount = models.PositiveIntegerField(null = False)
+    Transaction_Date = models.DateTimeField(auto_now_add=True)
+    User_Details = models.ForeignKey(User, on_delete=models.CASCADE, null= True, blank= True)
+    Transaction_Status = models.BooleanField(default = False)
+    
+    def __str__(self):
+        return self.Transaction_ID
