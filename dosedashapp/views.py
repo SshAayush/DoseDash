@@ -176,6 +176,7 @@ def checkout(request):
 
 def success(request):
     pidx = request.GET['pidx']
+    paymnet_status = request.GET['status']
     
     url = "https://a.khalti.com/api/v2/epayment/lookup/"
     
@@ -197,18 +198,26 @@ def success(request):
     
     #check for valid transaction form database and update the status
     #check for valid transaction by checking transaction id and userid
-    if request.method == "POST":
-        transaction = Transaction.objects.get(Transaction_ID=pidx)
-        if transaction and transaction.User_Details.username == request.user.username:
-            transaction.Transaction_Status = True
-            transaction.save()
+    transaction = Transaction.objects.get(Transaction_ID=pidx)
+    if transaction and transaction.User_Details.username == request.user.username:
+        transaction.Transaction_Status = paymnet_status
+        transaction.save()
+        
+        #if payment is successful remove item from cart
+        if transaction.Transaction_Status == "Completed":
+            user_id = request.user.id
+            # Assuming each user can have only one cart
+            cart = Cart.objects.filter(User_Details=user_id)
+            if cart:
+                cart.delete()
             return render(request, "success.html", {'pidx':pidx,
-                                                    })
+                                                })
         else:
-            print("Not a valid payment.")
-            return HttpResponse("Unauthorized access or transaction not found.", status=401)
+            print("Payment not completed.",paymnet_status)
+            return HttpResponse("Payment not completed.", status=401)
     else:
-        return HttpResponse("Invalid request method.", status=405)
+        print("Not a valid payment.")
+        return HttpResponse("Unauthorized access or transaction not found.", status=401)
 
     
 
