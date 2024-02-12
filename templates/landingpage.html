@@ -26,7 +26,7 @@
           <h5>New Arrivals</h5>
           <h1><span>Best Price</span> This Year</h1>
           <p>Lorem ipsum dolor, sit amet <br>consectetur adipisicing elit. Odio sequi sed.</p>
-          <button>Shop Now</button>
+          <a href="{% url 'shop' %}"><button>Shop Now</button></a>
         </div>
       </section>
 
@@ -100,7 +100,7 @@
         <div class="container">
           <h4>Mid Season Sale</h4>
           <h1>Autumn Collection<br>UP TO 20% OFF</h1>
-          <button class="text-uppercase">Shop Now</button>
+          <a href="{% url 'shop' %}"><button class="text-uppercase">Shop Now</button></a>
         </div>
       </section>
 
@@ -111,33 +111,18 @@
           <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Facilis quaerat magni voluptatum veniam esse quae veritatis id officiis, magnam ab, ex temporibus commodi quod fugiat culpa expedita dignissimos ipsum reiciendis.</p>
         </div>
         <div class="row mx-auto container-fluid">
-          <div class="product text-center col-lg-3 col-md-4 col-12">
-            <img class="img-fluid mb-3" src="{% static 'image/medicine/1.jpg' %}" alt="">
-            <h5 class="p-name">Sport Boots</h5>
-            <h4 class="p-price">$192</h4>
-            <button class="buy-btn">Buy Now</button>
-          </div>
-
-          <div class="product text-center col-lg-3 col-md-4 col-12">
-            <img class="img-fluid mb-3" src="{% static 'image/medicine/2.jpg' %}" alt="">
-            <h5 class="p-name">Sport Boots</h5>
-            <h4 class="p-price">$192</h4>
-            <button class="buy-btn">Buy Now</button>
-          </div>
-
-          <div class="product text-center col-lg-3 col-md-4 col-12">
-            <img class="img-fluid mb-3" src="{% static 'image/medicine/3.jpg' %}" alt="">
-            <h5 class="p-name">Sport Boots</h5>
-            <h4 class="p-price">$192</h4>
-            <button class="buy-btn">Buy Now</button>
-          </div>
-
-          <div class="product text-center col-lg-3 col-md-4 col-12">
-            <img class="img-fluid mb-3" src="{% static 'image/medicine/3.jpg' %}" alt="">
-            <h5 class="p-name">Sport Boots</h5>
-            <h4 class="p-price">$192</h4>
-            <button class="buy-btn">Buy Now</button>
-          </div>
+          {% for product in products %}
+            {% for tag in product.Product_Tag.all %}
+              {% if tag.tag == "medicines" %}
+                <div class="product text-center col-lg-3 col-md-4 col-12">
+                  <img class="img-fluid mb-3" src="/{{ product.Product_Image }}" alt="">
+                  <h5 class="p-name">{{ product.Product_Name }}</h5>
+                  <h4 class="p-price">Rs.{{ product.Product_Price }}</h4>
+                  <a href="{% url 'product' product.id %}"><button class="buy-btn">Buy Now</button></a>
+                </div>
+              {% endif %}
+            {% endfor %}
+          {% endfor %}
         </div>
       </section>
 

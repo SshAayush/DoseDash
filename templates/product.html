@@ -44,24 +44,20 @@
             </div>
 
             <div class="col-lg-5 col-md-12 col-12">
-                <!-- <h6>Home / T-shirt</h6> -->
                 <h3 class="my-3">{{ product.Product_Name }}</h3>
                 <h2>Rs.{{ product.Product_Price }}</h2>
-
-
-                {% comment %} <form action="{% url 'addCart' %}" method="POST" id="addcart">
-                  {% csrf_token %}
-                  <input type="number" name="id" value="{{ product.id }}" hidden/>
-                  <!-- <input type="number" name="user_id" value="{{ user_id }}" hidden/> -->
-                  <input type="number" name="quantity" value="1"/>
-                  <!-- <input type="submit" value="Add To Cart" class="buy-btn" /> -->
-                  <button type="submit" class="buy-btn" form="addcart" value="Add To Cart">Add To Cart</button>
-                </form> {% endcomment %}
                 <form action="{% url 'addCart' %}" method="POST" id="addcart">
                   {% csrf_token %}
                   <input type="number" name="quantity" value="1"/>
+                  {% if request.user.is_authenticated %}
                   <button type="submit" class="buy-btn">Add To Cart</button>
-              </form>
+                  {% else %}
+                  <button class="buy-btn" disabled>Signin</button>
+                  {% endif %}
+                </form>
+                <br>
+                <a href="{% url 'reminder' product.id %}"><i class="fa-regular fa-bell"></i></a>
+                {% comment %} <i class="fa-solid fa-bell"></i> {% endcomment %}
 
                 <h4 class="mt-5 mb-5">Product Details</h4>
                 <span>{{ product.Product_Description }}</span>

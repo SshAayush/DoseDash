@@ -2,14 +2,20 @@ from django.shortcuts import render
 from django.shortcuts import redirect
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login, logout
-from .models import Product,Cart,Transaction
+from .models import Product,Cart,Transaction, Reminder
 from django.shortcuts import redirect
 import uuid, requests, json
 from django.http import HttpResponse
+from datetime import datetime
 
 # Create your views here.
 def landingPage(request):
-    return render(request, 'landingpage.html', {})
+
+    products = Product.objects.all()
+    
+    return render(request, 'landingpage.html', {'products' : products,
+                        
+                                                })
 
 def signup(request):
     if request.method == 'POST':
@@ -169,7 +175,7 @@ def checkout(request):
     # Save the transaction code in the db to validate transaction
     transaction_id = new_res['pidx']
     
-    transaction = Transaction(Transaction_ID=transaction_id, Transaction_Amount=subPaisa, User_Details=User.objects.get(id=user.id))
+    transaction = Transaction(Transaction_ID=transaction_id, Transaction_Amount=subPaisa, User_Details=User.objects.get(id=user.id),Transaction_Date=datetime.now())
     transaction.save()
         
     return redirect(new_res['payment_url'])
@@ -219,7 +225,12 @@ def success(request):
         print("Not a valid payment.")
         return HttpResponse("Unauthorized access or transaction not found.", status=401)
 
-    
+def reminder(request,pk):
+    user = request.user
+    product = Product.objects.get(id = pk)
+    reminder = Reminder(Reminder_UserName=User.objects.get(id=user.id), Reminder_ProductId=Product.objects.get(id=product.id), Reminder_Date=datetime.now())
+    reminder.save()
+    return redirect("landingPage")
 
 def logOut(request):
     logout(request)

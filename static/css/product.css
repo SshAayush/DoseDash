@@ -30,3 +30,14 @@
     opacity: 1;
     transition: 0.3s all;
 }
+
+body > section.container.sproduct.my-5.pt-5 > div > div:nth-child(2) > a > i {
+    color: #0b3b47;
+    transition: 0.3s all;
+    font-size: 30px;
+}
+
+body > section.container.sproduct.my-5.pt-5 > div > div:nth-child(2) > a > i:hover {
+    color: #000;
+    transform: scale(1.2); /* Increase the size to 1.2 times */
+}
