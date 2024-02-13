@@ -42,3 +42,13 @@ class Reminder(models.Model):
     
     def __str__(self):
         return self.Reminder_UserName.username + " - " + self.Reminder_ProductId.Product_Name
+    
+class ContactUs(models.Model):
+    Customer_Name = models.CharField(max_length = 200)
+    Customer_Email = models.EmailField(max_length = 200)
+    Customer_Message = models.TextField()
+    
+    def __str__(self):
+        return self.Customer_Name
+    
+    

@@ -2,7 +2,7 @@ from django.shortcuts import render
 from django.shortcuts import redirect
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login, logout
-from .models import Product,Cart,Transaction, Reminder
+from .models import Product,Cart,Transaction, Reminder, ContactUs
 from django.shortcuts import redirect
 import uuid, requests, json
 from django.http import HttpResponse
@@ -231,6 +231,17 @@ def reminder(request,pk):
     reminder = Reminder(Reminder_UserName=User.objects.get(id=user.id), Reminder_ProductId=Product.objects.get(id=product.id), Reminder_Date=datetime.now())
     reminder.save()
     return redirect("landingPage")
+
+def contactUs(request):
+    if request.method == "POST":
+        name = request.POST["name"]
+        email = request.POST["email"]
+        message = request.POST["comment"]
+        
+        contact = ContactUs(Customer_Name=name, Customer_Email=email, Customer_Message=message)
+        contact.save()
+        # return render('contactus')
+    return render(request,"contactus.html",{})
 
 def logOut(request):
     logout(request)

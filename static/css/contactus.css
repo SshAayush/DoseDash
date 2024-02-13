@@ -1,0 +1,95 @@
+@import url("/static/css/navbar.css");
+@import url("/static/css/footer.css");
+@import url("/static/css/style.css");
+.logo {
+  padding-bottom: 1rem;
+}
+
+.navbar {
+  background-color: black;
+  max-height: 7rem;
+}
+.nav-right a {
+  padding-bottom: 1rem;
+}
+.contact-head {
+  text-transform: uppercase;
+  font-size: 26px;
+  text-align: center;
+  margin-top: 2rem;
+  text-decoration: underline 2px solid #0b3b47;
+}
+.contact-container {
+  display: flex;
+  justify-content: space-around;
+  max-width: 100vw;
+  animation: transitionOnPage 0.75s;
+}
+.contact-text {
+  width: 30%;
+  margin-top: 5rem;
+}
+.text-head {
+  text-align: start;
+  font-size: 26px;
+  font-weight: 500;
+  text-transform: uppercase;
+}
+.text-body {
+  text-align: start;
+  margin-top: 3rem;
+  font-size: 16px;
+  text-transform: capitalize;
+}
+.form-container {
+  margin-top: 5rem;
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+}
+.form-header {
+  padding-top: 1rem;
+  text-align: center;
+  font-size: 25px;
+  text-transform: capitalize;
+  text-decoration: underline 2px #0b3b47;
+}
+.contact-form {
+  margin-top: 1rem;
+  display: flex;
+  padding: 2rem;
+  flex-direction: column;
+}
+.contact-form input {
+  width: 20rem;
+  margin: 0.8rem;
+  padding: 0.5rem;
+}
+#s-class {
+  width: 20rem;
+  padding: 0.5rem;
+  margin: 0.8rem;
+}
+.text-area {
+  width: 20rem;
+  height: 5rem;
+  padding: 0.5rem;
+  margin: 0.8rem;
+}
+.submit {
+  font-size: 0.8rem;
+  font-weight: 700;
+  outline: none;
+  border: none;
+  background-color: #1d1d1d;
+  color: aliceblue;
+  padding: 13px 30px;
+  cursor: pointer;
+  text-transform: uppercase;
+  transition: 0.3s ease;
+  border-radius: 0;
+}
+/* .submit:hover {
+  background-color: #fff;
+  border: 1px solid #0b3b47;
+  color: black;
+  cursor: pointer;
+} */
