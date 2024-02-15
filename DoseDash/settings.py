@@ -127,3 +127,9 @@ STATICFILES_DIRS = [STATIC_DIR]
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 #SMTP Configuration
+
+EMAIL_HOST = 'smtp-relay.brevo.com'
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+EMAIL_HOST_USER = 'xayush.tc@gmail.com'
+EMAIL_HOST_PASSWORD = 'xsmtpsib-73c45bef67e32bc69eebedfe72f50b1e67566f79fcd0a4b64873388b4188ba25-wDSsmB3nkfRd80K6'
