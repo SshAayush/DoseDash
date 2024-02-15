@@ -56,8 +56,11 @@
                   {% endif %}
                 </form>
                 <br>
-                <a href="{% url 'reminder' product.id %}"><i class="fa-regular fa-bell"></i></a>
-                {% comment %} <i class="fa-solid fa-bell"></i> {% endcomment %}
+                {% if reminder %}
+                  <i class="fa-solid fa-bell"></i>
+                {% else %}
+                  <a href="{% url 'addreminder' product.id %}"><i class="fa-regular fa-bell"></i></a>
+                {% endif %}
 
                 <h4 class="mt-5 mb-5">Product Details</h4>
                 <span>{{ product.Product_Description }}</span>

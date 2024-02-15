@@ -6,7 +6,13 @@ from .models import Product,Cart,Transaction, Reminder, ContactUs
 from django.shortcuts import redirect
 import uuid, requests, json
 from django.http import HttpResponse
-from datetime import datetime
+from datetime import datetime,timedelta
+from django.utils import timezone
+
+# used to send mail
+from django.core.mail import EmailMultiAlternatives
+from django.template.loader import render_to_string
+from django.utils.html import strip_tags
 
 # Create your views here.
 def landingPage(request):
@@ -68,10 +74,16 @@ def product(request,pk):
     user_id = request.user.id
     request.session['product_id'] = pk
     
-    prodct = Product.objects.get(id = pk)
+
+    #Get the product this is already in the reminder list
+    reminders = Reminder.objects.all()
+    reminder = reminders.filter(Reminder_UserName = user_id, Reminder_ProductId = pk)
+    
+    product = Product.objects.get(id = pk)
     return render (request, "product.html", {
-        'product': prodct,
+        'product': product,
         'user_id' : user_id,
+        'reminder' : reminder,
     })
     
 def cart(request):
@@ -225,12 +237,47 @@ def success(request):
         print("Not a valid payment.")
         return HttpResponse("Unauthorized access or transaction not found.", status=401)
 
-def reminder(request,pk):
+def addreminder(request,pk):
     user = request.user
     product = Product.objects.get(id = pk)
     reminder = Reminder(Reminder_UserName=User.objects.get(id=user.id), Reminder_ProductId=Product.objects.get(id=product.id), Reminder_Date=datetime.now())
     reminder.save()
-    return redirect("landingPage")
+    return redirect("product",pk=pk)
+
+def sendReminder(request):
+    reminder = Reminder.objects.all()
+    threshold_date = timezone.now() - timedelta(hours=1)
+    print(threshold_date)
+    
+    sendReminder = Reminder.objects.filter(Reminder_Date__lt=threshold_date)
+    print(sendReminder)
+    
+    emails = []
+
+    for reminder in sendReminder:
+    # user = Customer.objects.get(customer_email = email)
+        emails.append(reminder.Reminder_UserName.email)
+        
+        subject = "Time to Order Your Medication from DoseDash"
+        html_content = render_to_string('offer_mail.html',{
+                                        'fname': reminder.Reminder_UserName.first_name, 
+                                        'lname': reminder.Reminder_UserName.last_name, 
+                                        'email': emails,
+                                        })
+        from_email = 'xayush.tc@gmail.com'
+        print(reminder.Reminder_UserName.first_name)
+        to = [reminder.Reminder_UserName.email]
+
+        text_content = strip_tags(html_content)
+        email = EmailMultiAlternatives(
+            subject,
+            text_content,
+            from_email,
+            to,
+        )
+        email.attach_alternative(html_content, "text/html")
+        email.send(fail_silently=False)
+    return redirect('landingPage')
 
 def contactUs(request):
     if request.method == "POST":

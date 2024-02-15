@@ -1,7 +1,7 @@
 @import url("/static/css/navbar.css");
 @import url("/static/css/footer.css");
 @import url("/static/css/style.css");
-.logo {
+/* .logo {
   padding-bottom: 1rem;
 }
 
@@ -11,6 +11,10 @@
 }
 .nav-right a {
   padding-bottom: 1rem;
+} */
+
+.navbar-light .navbar-nav .nav-link{
+  padding: 0px 6.4px;
 }
 .contact-head {
   text-transform: uppercase;
@@ -87,9 +91,3 @@
   transition: 0.3s ease;
   border-radius: 0;
 }
-/* .submit:hover {
-  background-color: #fff;
-  border: 1px solid #0b3b47;
-  color: black;
-  cursor: pointer;
-} */
