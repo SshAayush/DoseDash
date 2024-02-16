@@ -18,4 +18,6 @@ urlpatterns = [
     path('addreminder/<str:pk>/', views.addreminder, name="addreminder"),
     path('contactus/', views.contactUs, name="contactus"),
     path('sendReminder/', views.sendReminder, name="sendReminder"),
+    path('search/', views.search, name="search"),
+    path('t/', views.test, name="test"),
 ]

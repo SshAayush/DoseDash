@@ -8,6 +8,7 @@ import uuid, requests, json
 from django.http import HttpResponse
 from datetime import datetime,timedelta
 from django.utils import timezone
+from django.db.models import Q
 
 # used to send mail
 from django.core.mail import EmailMultiAlternatives
@@ -149,11 +150,11 @@ def checkout(request):
         uuid = request.POST["uuid"]
         return_url = request.POST["return_url"]
         
-        sipping_inc = float(subTotal) + 10
+        shipping_inc = float(subTotal) + 10
         
-        print("sipping inc",sipping_inc)
+        print("shipping inc",shipping_inc)
         
-        subPaisa = (float(sipping_inc)) * 100
+        subPaisa = (float(shipping_inc)) * 100
         
         user = request.user
         
@@ -161,7 +162,7 @@ def checkout(request):
         
         print("uuid",uuid)
         print("subTotal",subPaisa)
-        print("return_url",return_url)
+        print("return_url http://127.0.0.1:8000",return_url)
         print("user",user.username)
         
     url = "https://a.khalti.com/api/v2/epayment/initiate/"
@@ -179,24 +180,25 @@ def checkout(request):
         }
     })
     headers = {
-        'Authorization': 'key a224c46665374ec098a119e8ee5939e9',
+        'Authorization': 'key 07b52c0f30dc425ea9c53fd77e798e9d',
         'Content-Type': 'application/json',
     }
 
     response = requests.request("POST", url, headers=headers, data=payload)
 
-    print(response.text)
+    print("Response:",response.text)
     
-    new_res = json.loads(response.text)
-    print(new_res)
+    # new_res = json.loads(response.text)
+    # print(new_res)
     
-    # Save the transaction code in the db to validate transaction
-    transaction_id = new_res['pidx']
+    # # Save the transaction code in the db to validate transaction
+    # transaction_id = new_res['pidx']
     
-    transaction = Transaction(Transaction_ID=transaction_id, Transaction_Amount=subPaisa, User_Details=User.objects.get(id=user.id),Transaction_Date=datetime.now())
-    transaction.save()
+    # transaction = Transaction(Transaction_ID=transaction_id, Transaction_Amount=subPaisa, User_Details=User.objects.get(id=user.id),Transaction_Date=datetime.now())
+    # transaction.save()
         
-    return redirect(new_res['payment_url'])
+    # return redirect(new_res['payment_url'])
+    return HttpResponse(response.text, content_type="application/json")
 
 def success(request):
     pidx = request.GET['pidx']
@@ -230,10 +232,13 @@ def success(request):
         #if payment is successful remove item from cart
         if transaction.Transaction_Status == "Completed":
             user_id = request.user.id
+            
             # Assuming each user can have only one cart
             cart = Cart.objects.filter(User_Details=user_id)
             if cart:
-                cart.delete()
+                for c in cart:
+                    c.Cart_Details.Product_Quantity -= c.Cart_Quantity
+                    c.delete()
             return render(request, "success.html", {'pidx':pidx,
                                                 })
         else:
@@ -298,4 +303,29 @@ def contactUs(request):
 
 def logOut(request):
     logout(request)
+    return redirect('landingPage')
+
+
+def search(request):
+    if request.method == "POST":
+        search = request.POST['search']
+        products = Product.objects.filter(
+            Q(Product_Name__icontains = search)
+            )
+        print(products)
+        
+        return render(request, "shop.html", {'search':products,
+                                                })
+        
+    return render(request, "landingpage.html")
+
+def test(request):
+    user_id = request.user.id
+            
+    # Assuming each user can have only one cart
+    cart = Cart.objects.filter(User_Details=user_id)
+    for c in cart:
+        print(c.Cart_Details.Product_Name)
+    
+    
     return redirect('landingPage')

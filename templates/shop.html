@@ -27,14 +27,25 @@
             <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Facilis quaerat magni voluptatum veniam esse quae veritatis id officiis, magnam ab, ex temporibus commodi quod fugiat culpa expedita dignissimos ipsum reiciendis.</p>
           </div>
           <div class="row mx-auto container">
-            {% for product in products %}
-            <div onclick="window.location.href='{% url 'product' product.id %}'" class="product text-center col-lg-3 col-md-4 col-12">
-              <img class="img-fluid mb-3" src=/{{ product.Product_Image }} alt="">
-              <h5 class="p-name">{{ product.Product_Name }}</h5>
-              <h4 class="p-price">Rs.{{ product.Product_Price }}</h4>
-              <a href= "{% url 'product' product.id %}"><button class="buy-btn"> Buy Now</button></a>
-            </div>
-            {% endfor %}
+           {% if search %}
+              {% for s in search %}
+                <div onclick="window.location.href='{% url 'product' s.id %}'" class="product text-center col-lg-3 col-md-4 col-12">
+                  <img class="img-fluid mb-3" src=/{{ s.Product_Image }} alt="">
+                  <h5 class="p-name">{{ s.Product_Name }}</h5>
+                  <h4 class="p-price">Rs.{{ s.Product_Price }}</h4>
+                  <a href= "{% url 'product' s.id %}"><button class="buy-btn"> Buy Now</button></a>
+                </div>
+              {% endfor %}
+            {% else %}
+              {% for product in products %}
+                <div onclick="window.location.href='{% url 'product' product.id %}'" class="product text-center col-lg-3 col-md-4 col-12">
+                  <img class="img-fluid mb-3" src=/{{ product.Product_Image }} alt="">
+                  <h5 class="p-name">{{ product.Product_Name }}</h5>
+                  <h4 class="p-price">Rs.{{ product.Product_Price }}</h4>
+                  <a href= "{% url 'product' product.id %}"><button class="buy-btn"> Buy Now</button></a>
+                </div>
+              {% endfor %}
+            {% endif %}
           </div>
       </section>
 

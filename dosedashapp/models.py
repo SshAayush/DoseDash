@@ -13,6 +13,7 @@ class Product(models.Model):
     Product_Description = models.TextField()
     Product_Tag = models.ManyToManyField(ProductTag, blank = True)
     Product_Image = models.ImageField(upload_to = 'static/image/products/')
+    Product_Quantity = models.PositiveBigIntegerField(null = True)
     
     def __str__(self):
         return self.Product_Name

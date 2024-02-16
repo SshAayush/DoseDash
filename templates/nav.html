@@ -23,8 +23,9 @@
                   <a href= "{% url 'cart' %}"><i class="fa-solid fa-cart-shopping me-4"></i></a>
                 </li>
                 
-                <form class="search-form">
-                  <input type="search" id="search-box" placeholder="Search Here...">
+                <form class="search-form" action="{% url 'search' %}" method="POST">
+                  {% csrf_token %}
+                  <input type="search" id="search-box" name="search" placeholder="Search Here...">
                 </form>
 
                 <li class="nav-item">
