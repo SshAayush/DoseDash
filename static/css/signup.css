@@ -21,7 +21,7 @@
   text-align: start;
   text-transform: capitalize;
   font-size: 13px;
-  color: red;
+  color: #0b3b47;
   margin-bottom: 0.5rem;
 }
 .btn {
@@ -34,7 +34,7 @@
   transition: ease-in-out 0.3s;
 }
 .btn:hover {
-  border: 1px solid red;
+  border: 1px solid #0b3b47;
 }
 .btn a {
   text-decoration: none;
@@ -82,7 +82,7 @@ input {
   border-radius: 10px;
   width: 100%;
   margin-bottom: 0.5rem;
-  border: 1px solid red;
+  border: 1px solid #0b3b47;
 }
 .submit {
   display: flex;
@@ -91,7 +91,7 @@ input {
 .btn-submit {
   width: 8rem;
   height: 3rem;
-  background-color: red;
+  background-color: #0b3b47;
   color: #fff;
   padding: 1rem;
   transition: ease-in-out 0.3s;
@@ -113,11 +113,11 @@ input {
   transition: ease-in-out 0.5s;
 }
 .f-pass a:hover {
-  color: red;
+  color: #0b3b47;
 }
 .show-pass{
  /* position: absolute; */
- color: red;
+ color: #0b3b47;
  position: relative;
   left: 90%;
   top: -3rem;

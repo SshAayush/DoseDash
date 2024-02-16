@@ -24,6 +24,9 @@ def landingPage(request):
                                                 })
 
 def signup(request):
+    if request.user.is_authenticated:
+        print("ALready logged in.")
+        return redirect('landingPage')
     if request.method == 'POST':
         username = request.POST["username"]
         fname = request.POST["fname"]
@@ -49,6 +52,9 @@ def signup(request):
     return render (request, 'signup.html', {})
 
 def signin(request):
+    if request.user.is_authenticated:
+        print("ALready logged in.")
+        return redirect('landingPage')
     if request.method == "POST":
         username = request.POST["username"]
         password = request.POST["password"]

@@ -19,10 +19,14 @@
                   <a class="nav-link me-4" aria-current="page" href="{% url 'contactus' %}">Contact Us</a>
                 </li>
                 <li class="nav-item cart-item">
-                  <i class="fa-solid fa-magnifying-glass me-4"></i>
+                  <i id="searchIcon" class="fa-solid fa-magnifying-glass me-4"></i>
                   <a href= "{% url 'cart' %}"><i class="fa-solid fa-cart-shopping me-4"></i></a>
                 </li>
                 
+                <form class="search-form">
+                  <input type="search" id="search-box" placeholder="Search Here...">
+                </form>
+
                 <li class="nav-item">
                   {% if request.user.is_authenticated %}
                   <a class="nav-link me-4" aria-current="page" href="{% url "logout" %}">Log Out</a>
@@ -33,3 +37,31 @@
             </div>
           </div>
       </nav>
+      <script>
+        {% comment %} let searchBtn = document.querySelector('.search-form'); {% endcomment %}
+        const searchIcon = document.getElementById('searchIcon');
+        {% comment %} document.querySelector('#searchIcon').onclick = () =>
+        {
+            searchBtn.classList.toggle('active');
+        } {% endcomment %}
+        const searchForm = document.querySelector(".search-form");
+        searchIcon.addEventListener("click", () => {
+          searchForm.classList.add('active');
+        });
+
+        {% comment %} const searchIcon = document.getElementById("searchIcon"); {% endcomment %}
+        document.addEventListener("click", function(event) {
+          const searchBox = document.getElementById("search-box");
+          if (event.target == searchForm) {
+            console.log("Is search form...");
+          }
+          
+          // Check if the click event target is not the search icon or the search input box
+          if (event.target !== searchIcon && event.target !== searchBox) {
+            searchForm.classList.remove('active'); // Hide the search input box
+            console.log("outside the form...");
+          }
+
+        });
+        {% comment %} searchForm.classList.remove('active'); {% endcomment %}
+      </script>
