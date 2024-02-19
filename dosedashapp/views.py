@@ -186,23 +186,22 @@ def checkout(request):
 
     response = requests.request("POST", url, headers=headers, data=payload)
 
-    print("Response:",response.text)
     
-    # new_res = json.loads(response.text)
-    # print(new_res)
+    new_res = json.loads(response.text)
+    print(new_res)
     
-    # # Save the transaction code in the db to validate transaction
-    # transaction_id = new_res['pidx']
+    # Save the transaction code in the db to validate transaction
+    transaction_id = new_res['pidx']
     
-    # transaction = Transaction(Transaction_ID=transaction_id, Transaction_Amount=subPaisa, User_Details=User.objects.get(id=user.id),Transaction_Date=datetime.now())
-    # transaction.save()
+    transaction = Transaction(Transaction_ID=transaction_id, Transaction_Amount=subPaisa, User_Details=User.objects.get(id=user.id),Transaction_Date=datetime.now())
+    transaction.save()
         
-    # return redirect(new_res['payment_url'])
-    return HttpResponse(response.text, content_type="application/json")
+    return redirect(new_res['payment_url'])
+    # return HttpResponse(response.text, content_type="application/json")
 
 def success(request):
     pidx = request.GET['pidx']
-    paymnet_status = request.GET['status']
+    payment_status = request.GET['status']
     
     url = "https://a.khalti.com/api/v2/epayment/lookup/"
     
@@ -226,23 +225,25 @@ def success(request):
     #check for valid transaction by checking transaction id and userid
     transaction = Transaction.objects.get(Transaction_ID=pidx)
     if transaction and transaction.User_Details.username == request.user.username:
-        transaction.Transaction_Status = paymnet_status
+        transaction.Transaction_Status = payment_status
         transaction.save()
         
         #if payment is successful remove item from cart
         if transaction.Transaction_Status == "Completed":
             user_id = request.user.id
-            
             # Assuming each user can have only one cart
             cart = Cart.objects.filter(User_Details=user_id)
             if cart:
                 for c in cart:
-                    c.Cart_Details.Product_Quantity -= c.Cart_Quantity
+                    products = Product.objects.get(id = c.Cart_Details.id)
+                    products.Product_Quantity -= c.Cart_Quantity
+                    # c.Cart_Details.Product_Quantity -= c.Cart_Quantity
+                    products.save()
                     c.delete()
             return render(request, "success.html", {'pidx':pidx,
                                                 })
         else:
-            print("Payment not completed.",paymnet_status)
+            print("Payment not completed.",payment_status)
             return HttpResponse("Payment not completed.", status=401)
     else:
         print("Not a valid payment.")

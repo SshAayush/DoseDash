@@ -24,7 +24,7 @@ class Cart(models.Model):
     User_Details = models.ForeignKey(User, on_delete=models.CASCADE, null= True, blank= True)
     
     def __str__(self):
-        return self.Cart_Details.Product_Name
+        return self.User_Details.username + " - " +self.Cart_Details.Product_Name
     
 class Transaction(models.Model):
     Transaction_ID = models.CharField(max_length = 200)
