@@ -22,21 +22,25 @@
         
       <section id="featured" class="my-5 py-5">
           <div class="container mt-5 py-5">
-            <h2 class="font-weight-bold">Our Featured</h2>
+            <h2 class="font-weight-bold">Products</h2>
             <hr>
-            <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Facilis quaerat magni voluptatum veniam esse quae veritatis id officiis, magnam ab, ex temporibus commodi quod fugiat culpa expedita dignissimos ipsum reiciendis.</p>
+            {% comment %} <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Facilis quaerat magni voluptatum veniam esse quae veritatis id officiis, magnam ab, ex temporibus commodi quod fugiat culpa expedita dignissimos ipsum reiciendis.</p> {% endcomment %}
           </div>
           <div class="row mx-auto container">
-           {% if search %}
-              {% for s in search %}
-                <div onclick="window.location.href='{% url 'product' s.id %}'" class="product text-center col-lg-3 col-md-4 col-12">
-                  <img class="img-fluid mb-3" src=/{{ s.Product_Image }} alt="">
-                  <h5 class="p-name">{{ s.Product_Name }}</h5>
-                  <h4 class="p-price">Rs.{{ s.Product_Price }}</h4>
-                  <a href= "{% url 'product' s.id %}"><button class="buy-btn"> Buy Now</button></a>
-                </div>
-              {% endfor %}
-            {% else %}
+            {% if message %}
+              <h4>{{ message }}</h4>
+            {% endif %}
+            {% if search %}
+                {% for s in search %}
+                  <div onclick="window.location.href='{% url 'product' s.id %}'" class="product text-center col-lg-3 col-md-4 col-12">
+                    <img class="img-fluid mb-3" src=/{{ s.Product_Image }} alt="">
+                    <h5 class="p-name">{{ s.Product_Name }}</h5>
+                    <h4 class="p-price">Rs.{{ s.Product_Price }}</h4>
+                    <a href= "{% url 'product' s.id %}"><button class="buy-btn"> Buy Now</button></a>
+                  </div>
+                {% endfor %}
+            {% endif %}
+            {% if products %}
               {% for product in products %}
                 <div onclick="window.location.href='{% url 'product' product.id %}'" class="product text-center col-lg-3 col-md-4 col-12">
                   <img class="img-fluid mb-3" src=/{{ product.Product_Image }} alt="">

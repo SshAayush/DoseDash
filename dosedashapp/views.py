@@ -81,7 +81,6 @@ def product(request,pk):
     user_id = request.user.id
     request.session['product_id'] = pk
     
-
     #Get the product this is already in the reminder list
     reminders = Reminder.objects.all()
     reminder = reminders.filter(Reminder_UserName = user_id, Reminder_ProductId = pk)
@@ -118,21 +117,27 @@ def addCart(request):
         
             # Check if the product is already in the cart for the current user
             existing_cart_items = Cart.objects.filter(Cart_Details=product_id, User_Details=user_id)
+            print("Quantity in db:" ,product.Product_Quantity)
+            print("Quantity Req:" ,quantity)
 
-            if existing_cart_items.exists():
+            if existing_cart_items.exists() and quantity <= product.Product_Quantity:
                 # If the product is already in the cart, update the quantity
                 cart_item = existing_cart_items.first()
                 cart_item.Cart_Quantity += quantity  # Increment quantity
                 cart_item.save()
-            else:
+                return redirect('cart')
+            elif quantity <= product.Product_Quantity:
                 # If the product is not in the cart, create a new cart item
                 cart = Cart(Cart_Quantity=quantity, Cart_Details=product, User_Details=User.objects.get(id=user_id))
                 cart.save()
-        
+                return redirect('cart')
+            else:
+                print("Insufficent Stock")
+
         # Clear the session variable after processing
         request.session.pop('product_id', None)
         
-        return redirect('cart')
+        return redirect('shop')
 
 def removeCart(request,pk):
     user_id = request.user.id
@@ -314,11 +319,15 @@ def search(request):
             Q(Product_Name__icontains = search)
             )
         print(products)
+        if not products:
+            msg = "Sorry, Product not found! Try using other keywords."
+            return render(request, "shop.html", {'message':msg,
+                                                })
         
         return render(request, "shop.html", {'search':products,
                                                 })
         
-    return render(request, "landingpage.html")
+    return render(request, "shop.html")
 
 def test(request):
     user_id = request.user.id
