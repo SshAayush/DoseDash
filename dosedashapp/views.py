@@ -2,13 +2,14 @@ from django.shortcuts import render
 from django.shortcuts import redirect
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login, logout
-from .models import Product,Cart,Transaction, Reminder, ContactUs
+from .models import Product,Cart,Transaction, Reminder, ContactUs,ProductTag
 from django.shortcuts import redirect
 import uuid, requests, json
 from django.http import HttpResponse
 from datetime import datetime,timedelta
 from django.utils import timezone
 from django.db.models import Q
+from random import sample
 
 # used to send mail
 from django.core.mail import EmailMultiAlternatives
@@ -17,11 +18,17 @@ from django.utils.html import strip_tags
 
 # Create your views here.
 def landingPage(request):
-
-    products = Product.objects.all()
     
-    return render(request, 'landingpage.html', {'products' : products,
-                        
+    # product_tag = 1 -> "medicines" because the id of medicine tag is 1
+    all_meds = list(Product.objects.filter(Product_Tag = 1))
+    medicine = sample(all_meds, 4)
+    
+     # product_tag = 2 -> "featured" because the id of featured tag is 1
+    all_featured = list(Product.objects.filter(Product_Tag = 2))
+    featured = sample(all_featured, 4)
+    
+    return render(request, 'landingpage.html', {'meds' : medicine,
+                                                'featured' : featured,
                                                 })
 
 def signup(request):
@@ -114,25 +121,30 @@ def addCart(request):
 
         if product_id:
             product = Product.objects.get(id=product_id)
+            
+            if product.Product_Quantity != None and product.Product_Quantity != 0:
         
-            # Check if the product is already in the cart for the current user
-            existing_cart_items = Cart.objects.filter(Cart_Details=product_id, User_Details=user_id)
-            print("Quantity in db:" ,product.Product_Quantity)
-            print("Quantity Req:" ,quantity)
+                # Check if the product is already in the cart for the current user
+                existing_cart_items = Cart.objects.filter(Cart_Details=product_id, User_Details=user_id)
+                print("Quantity in db:" ,product.Product_Quantity)
+                print("Quantity Req:" ,quantity)
 
-            if existing_cart_items.exists() and quantity <= product.Product_Quantity:
-                # If the product is already in the cart, update the quantity
-                cart_item = existing_cart_items.first()
-                cart_item.Cart_Quantity += quantity  # Increment quantity
-                cart_item.save()
-                return redirect('cart')
-            elif quantity <= product.Product_Quantity:
-                # If the product is not in the cart, create a new cart item
-                cart = Cart(Cart_Quantity=quantity, Cart_Details=product, User_Details=User.objects.get(id=user_id))
-                cart.save()
-                return redirect('cart')
+                if existing_cart_items.exists() and quantity <= product.Product_Quantity:
+                    # If the product is already in the cart, update the quantity
+                    cart_item = existing_cart_items.first()
+                    cart_item.Cart_Quantity += quantity  # Increment quantity
+                    cart_item.save()
+                    return redirect('cart')
+                elif quantity <= product.Product_Quantity:
+                    # If the product is not in the cart, create a new cart item
+                    cart = Cart(Cart_Quantity=quantity, Cart_Details=product, User_Details=User.objects.get(id=user_id))
+                    cart.save()
+                    return redirect('cart')
+                else:
+                    print("Insufficent Stock")
             else:
-                print("Insufficent Stock")
+                url = "product/" + product_id
+                return redirect(url)
 
         # Clear the session variable after processing
         request.session.pop('product_id', None)
