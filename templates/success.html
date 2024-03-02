@@ -1,22 +1,107 @@
 {% load static %}
 <!DOCTYPE html>
-<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
-<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
-<!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
-<!--[if gt IE 8]>      <html class="no-js"> <!--<![endif]-->
 <html>
-    <head>
-        <meta charset="utf-8">
-        <meta http-equiv="X-UA-Compatible" content="IE=edge">
-        <title></title>
-        <meta name="description" content="">
-        <meta name="viewport" content="width=device-width, initial-scale=1">
-        <link rel="stylesheet" href="">
-    </head>
-    <body>
-        <h1>Payment successful!!</h1>
-        <p>PIDX = {{ pidx }}</p>
-        
-        <script src="" async defer></script>
-    </body>
+  <head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <title></title>
+    <meta name="description" content="" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="stylesheet" href="" />
+
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        background-color: #f0f0f0;
+        display: flex;
+        justify-content: center; /* Center horizontally */
+        align-items: center; /* Center vertically */
+        height: 100vh;
+      }
+      .container {
+        width: 600px;
+        margin: 0 auto;
+        background-color: white;
+        padding: 20px;
+        border: 1px solid #cccccc;
+      }
+      .logo {
+        text-align: center;
+      }
+      .message {
+        font-size: 24px;
+        color: green;
+        text-align: center;
+        display: flex;
+        justify-content: center;
+      }
+      .details {
+        margin-top: 20px;
+        font-size: 18px;
+      }
+      .detail {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 10px;
+      }
+      .label {
+        font-weight: bold;
+      }
+      .value {
+        color: #666666;
+      }
+      .btn {
+        display: block;
+        text-align: center;
+        background-color: transparent;
+      }
+      button {
+        border: none;
+        outline: none;
+        cursor: pointer;
+      }
+      .btn a {
+        text-decoration: none;
+        border: none;
+        padding: 10px;
+        margin: 10px;
+        font-size: 20px;
+        background-color: green;
+        color: white;
+        border-radius: 10px;
+        outline: none;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <div class="logo">
+        <img src="{% static 'image/logo/done.png' %}" alt="Logo" />
+      </div>
+      <div class="message">Your transaction has been completed.</div>
+      <div class="details">
+        <div class="detail">
+          <div class="label">Transaction ID:</div>
+          <div class="value">{{ transaction.Transaction_ID }}</div>
+        </div>
+        <div class="detail">
+          <div class="label">Amount:</div>
+          <div class="value">{{ transaction.Transaction_Amount }}</div>
+        </div>
+        <div class="detail">
+          <div class="label">Date:</div>
+          <div class="value">{{ transaction.Transaction_Date }}</div>
+        </div>
+        <div class="detail">
+          <div class="label">Payment Method:</div>
+          <div class="value">E-wallet/Khalti</div>
+        </div>
+
+        <div class="btn">
+          <button><a href="/">Return to home</a></button>
+        </div>
+      </div>
+    </div>
+    <script src="" async defer></script>
+  </body>
 </html>

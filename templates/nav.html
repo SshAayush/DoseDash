@@ -2,7 +2,7 @@
 {% load static %}
     <nav class="navbar navbar-expand-lg bg-body-tertiary navbar-light bg-white py-3 fixed-top">
           <div class="container">
-            <a href= "/"><img src = "{% static "image/logo/logo.png" %}" alt = 'logo'></a>
+            <a href= "/"><img class="logo" src = "{% static "image/logo/logo.png" %}" alt = 'logo' style="width: 145px; height: 50px;"</a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
               <span><i id="bar" class="fa-solid fa-bars"></i></span>
             </button>
@@ -22,19 +22,39 @@
                   <i id="searchIcon" class="fa-solid fa-magnifying-glass me-4"></i>
                   <a href= "{% url 'cart' %}"><i class="fa-solid fa-cart-shopping me-4"></i></a>
                 </li>
+
                 
                 <form class="search-form" action="{% url 'search' %}" method="POST">
                   {% csrf_token %}
                   <input type="search" id="search-box" name="search" placeholder="Search Here...">
                 </form>
-
-                <li class="nav-item">
+                
+                {% comment %} <li class="nav-item">
                   {% if request.user.is_authenticated %}
                   <a class="nav-link me-4" aria-current="page" href="{% url "logout" %}">Log Out</a>
                   {% else %}
                   <a class="nav-link me-4" aria-current="page" href="{% url "signin" %}">Sign In</a>
                   {% endif %}
-                </li>
+                </li> {% endcomment %}
+
+                <li class="nav-item dropdown user">
+                  <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                     <i class="fa-solid fa-user"></i>
+                  </a>
+                  <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                     <a class="dropdown-item {% if request.resolver_match.url_name == 'changePassword' %}active{% endif %}" href="{% url 'changePassword' %}">Change Password</a>
+                     <a class="dropdown-item {% if request.resolver_match.url_name == 'profile' %}active{% endif %}" href="{% url 'profile' %}">Profile</a>
+                     <a class="dropdown-item {% if request.resolver_match.url_name == 'transactionHistory' %}active{% endif %}" href="{% url 'transactionHistory' %}">Transaction History</a>
+                     {% comment %} <li class="nav-item"> {% endcomment %}
+                      {% if request.user.is_authenticated %}
+                      <a class="dropdown-item" aria-current="page" href="{% url "logout" %}">Log Out</a>
+                      {% else %}
+                      <a class="dropdown-item" aria-current="page" href="{% url "signin" %}">Sign In</a>
+                      {% endif %}
+                    {% comment %} </li> {% endcomment %}
+                  </div>
+                 </li>
+
             </div>
           </div>
       </nav>
@@ -66,3 +86,6 @@
         });
         {% comment %} searchForm.classList.remove('active'); {% endcomment %}
       </script>
+      <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+      <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>

@@ -2,18 +2,16 @@
 <footer class="mt-5 py-5">
     <div class="row container mx-auto pt-5">
       <div class="footer-one col-lg-3 col-md-6 col-12">
-        <img src="{% static 'image/logo/logo.png' %}" alt="logo">
+        <img src="{% static 'image/logo/logobg.png' %}" alt="logo" style="width: 160px; height: 110px;">
         <p class="pt-3">We Specialize In Supporting Those With Conditions Such As Diabetes, High Blood Pressure, Asthma, And Thyroid Issues,Ensuring They Receive Consistent And Timely Access To Their Essential Medications.</p>
       </div>
 
       <div class="footer-one col-lg-3 col-md-6 col-12 mb-3">
         <h5 class="pb-2">Featured</h5>
         <ul class="text-uppercase list-unstyled">
-          <li><a href="#">Men</a></li>
-          <li><a href="#">Men</a></li>
-          <li><a href="#">Men</a></li>
-          <li><a href="#">Men</a></li>
-          <li><a href="#">Men</a></li>
+          {% for feature in featured %}
+            <li><a href="{% url 'product' feature.id %}">{{ feature.Product_Name }}</a></li>
+          {% endfor %}
         </ul>
       </div>
 

@@ -2,7 +2,7 @@ from django.shortcuts import render
 from django.shortcuts import redirect
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login, logout
-from .models import Product,Cart,Transaction, Reminder, ContactUs,ProductTag
+from .models import Product,Cart,Transaction, Reminder, ContactUs,ProductTag,UserProfile
 from django.shortcuts import redirect
 import uuid, requests, json
 from django.http import HttpResponse
@@ -10,6 +10,8 @@ from datetime import datetime,timedelta
 from django.utils import timezone
 from django.db.models import Q
 from random import sample
+from django.db.models.signals import post_save
+from django.dispatch import receiver
 
 # used to send mail
 from django.core.mail import EmailMultiAlternatives
@@ -31,7 +33,8 @@ def landingPage(request):
                                                 'featured' : featured,
                                                 })
 
-def signup(request):
+@receiver(post_save, sender=User)
+def signup(request,instance, created, **kwargs):
     if request.user.is_authenticated:
         print("ALready logged in.")
         return redirect('landingPage')
@@ -55,9 +58,16 @@ def signup(request):
             else:
                 user = User.objects.create_user(username=username, password=password, email=email, first_name=fname, last_name=lname)
                 user.save()
+                if created:
+                    UserProfile.objects.create(user=instance)
                 print('user created')
                 return redirect('signin')
     return render (request, 'signup.html', {})
+
+@receiver(post_save, sender=User)
+def save_user_profile(sender, instance,**kwargs):
+    instance.userprofile.save()
+
 
 def signin(request):
     if request.user.is_authenticated:
@@ -210,7 +220,16 @@ def checkout(request):
     # Save the transaction code in the db to validate transaction
     transaction_id = new_res['pidx']
     
-    transaction = Transaction(Transaction_ID=transaction_id, Transaction_Amount=subPaisa, User_Details=User.objects.get(id=user.id),Transaction_Date=datetime.now())
+    rupees = subPaisa / 100
+    
+    carts = Cart.objects.filter(User_Details=request.user)
+    
+    products = [cart.Cart_Details for cart in carts]
+
+    
+    transaction = Transaction(Transaction_ID=transaction_id, Transaction_Amount=rupees, User_Details=User.objects.get(id=user.id),Transaction_Date=datetime.now())
+    transaction.save()
+    transaction.Item_Pruchased.add(*products)
     transaction.save()
         
     return redirect(new_res['payment_url'])
@@ -258,6 +277,7 @@ def success(request):
                     products.save()
                     c.delete()
             return render(request, "success.html", {'pidx':pidx,
+                                                    'transaction':transaction,
                                                 })
         else:
             print("Payment not completed.",payment_status)
@@ -341,13 +361,89 @@ def search(request):
         
     return render(request, "shop.html")
 
+def changePassword(request):
+    return render(request, "changepassword.html")
+
+def profile(request):
+    user = request.user
+    
+    phone_number = user.userprofile.Phone_Number
+    return render(request, "profile.html", {'user':user
+                                            })
+
+def updateprofile(request):
+    user = request.user
+    
+    if request.method == "POST":
+        fname = request.POST['firstname']
+        lname = request.POST['lastname']
+        number = request.POST['number']
+        email = request.POST['email']
+        country = request.POST['address']
+        image = request.POST['image']
+        province = request.POST['province']
+        city = request.POST['city']
+        area = request.POST['area']
+        landmark = request.POST['landmark']
+        
+        user_profile = UserProfile.objects.get(user__id=user.id)
+         # Update the fields
+        user_profile.Phone_Number = number
+        user_profile.Country = country
+        user_profile.Province = province
+        user_profile.City = city
+        user_profile.Area = area
+        user_profile.Landmark = landmark
+        
+        # Handle the image upload
+        if 'image' in request.FILES:
+            user_profile.Image = request.FILES['image']
+        # If the image field is not provided, keep the existing image
+        
+        # Save the changes
+        user_profile.save()        
+    
+    return render(request, "profile.html", {'user':user
+                                            })
+
+def updatebilling(request):
+    user = request.user
+    return render(request, "profile.html", {'user':user
+                                            })
+
+def transactionHistory(request):
+    return render(request, "transactionhistory.html")
+
+
+
 def test(request):
     user_id = request.user.id
-            
+
+     # Retrieve carts belonging to the current user
+    carts = Cart.objects.filter(User_Details=request.user)
+    
+    products = [cart.Cart_Details for cart in carts]
+
+    # Create a Transaction instance
+    transaction = Transaction.objects.create(
+        Transaction_ID="100",  # Assuming Transaction_ID is a string field
+        Transaction_Amount=100,
+        User_Details=request.user,  # Use the current user
+        Transaction_Date=datetime.now()
+    )
+
+    # Add carts to the many-to-many field of the Transaction instance
+    # transaction.Item_Pruchased.add(*carts)
+    transaction.Item_Pruchased.add(*products)
+    transaction.save()
+
+    # print(cart.values_list('id', flat=True))
+
+
     # Assuming each user can have only one cart
-    cart = Cart.objects.filter(User_Details=user_id)
-    for c in cart:
-        print(c.Cart_Details.Product_Name)
+    # cart = Cart.objects.filter(User_Details=user_id)
+    # for c in cart:
+    #     print(c.Cart_Details.Product_Name)
     
     
     return redirect('landingPage')

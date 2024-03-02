@@ -19,5 +19,10 @@ urlpatterns = [
     path('contactus/', views.contactUs, name="contactus"),
     path('sendReminder/', views.sendReminder, name="sendReminder"),
     path('search/', views.search, name="search"),
+    path('changePassword/', views.changePassword, name="changePassword"),
+    path('profile/', views.profile, name="profile"),
+    path('transactionHistory/', views.transactionHistory, name="transactionHistory"),
+    path('updatebilling/', views.updatebilling, name="updatebilling"),
+    path('updateprofile/', views.updateprofile, name="updateprofile"),
     path('t/', views.test, name="test"),
 ]

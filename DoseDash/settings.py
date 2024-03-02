@@ -18,6 +18,7 @@ TEMPLATE_DIR = Path(BASE_DIR/'templates')
 STATIC_DIR = Path(BASE_DIR/'static')
 
 
+
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.0/howto/deployment/checklist/
 
@@ -34,6 +35,7 @@ ALLOWED_HOSTS = ['*']
 # Application definition
 
 INSTALLED_APPS = [
+    'jazzmin',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -103,6 +105,36 @@ AUTH_PASSWORD_VALIDATORS = [
         'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
     },
 ]
+
+
+
+
+#Tweaks in Jazzmin admin 
+JAZZMIN_UI_TWEAKS = {
+    "theme": "cyborg",
+    # "theme": "simplex",
+}
+
+JAZZMIN_SETTINGS = {
+    'site_title': "DoseDash",
+    'site_header': "DoseDash",
+    "site_brand": "DoseDash",
+
+    'site_logo': "/image/logo/logo.png",
+    'site_logo_classes': "img-square",
+    "hide_apps": ['auth'],
+    "icons": {
+        "DoseDash.Product": "fa-solid fa-cart-shopping",
+        "DoseDash.Cart": "fas fa-comments",
+        "DoseDash.Transaction": "fas fa-dumbbell",
+        "DoseDash.Reminder": "fas fa-key",
+        "DoseDash.ContactUs": "fas fa-user",
+
+    },
+    "order_with_respect_to": ["DoseDash.Product",],
+    
+}
+
 
 
 # Internationalization

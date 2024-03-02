@@ -211,6 +211,6 @@ button{
   background-color: #0b3b47;
 }
 
-#navbarSupportedContent > ul > li:nth-child(1) > a{
+#navbarSupportedContent > ul > li:nth-child(2) > a.nav-link.me-4.selected{
   color: #217288;
 }

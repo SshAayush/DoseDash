@@ -32,6 +32,7 @@ class Transaction(models.Model):
     Transaction_Date = models.DateTimeField()
     User_Details = models.ForeignKey(User, on_delete=models.CASCADE, null= True, blank= True)
     Transaction_Status = models.CharField(max_length = 300)
+    Item_Pruchased = models.ManyToManyField(Product, blank = True)
     
     def __str__(self):
         return self.User_Details.username + " - " + self.Transaction_ID
@@ -52,4 +53,15 @@ class ContactUs(models.Model):
     def __str__(self):
         return self.Customer_Name
     
-    
+class UserProfile(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    Phone_Number = models.CharField(max_length=15, blank=True, null=True)
+    Country = models.CharField(max_length=200, blank=True, null=True)
+    Province = models.CharField(max_length=200, blank=True, null=True)
+    City = models.CharField(max_length=200, blank=True, null=True)
+    Area = models.CharField(max_length=200, blank=True, null=True)
+    Landmark = models.CharField(max_length=200, blank=True, null=True)
+    Image = models.ImageField(upload_to = 'static/image/user/')
+
+    def __str__(self):
+        return self.user.username

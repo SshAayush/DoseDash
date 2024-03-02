@@ -1,0 +1,135 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Transaction History</title>
+
+    <link rel="stylesheet" href="{% static 'css/profile.css' %}" />
+
+    <!-- Bootstrap Css -->
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+
+    <!-- font-awsome cdn  -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+
+    {% comment %} <style>
+        input[type=number]::-webkit-inner-spin-button, input[type=number]::-webkit-outer-spin-button{
+            -webkit-appearance: none;
+            margin: 0;
+        }
+    </style> {% endcomment %}
+</head>
+<body>
+    <!-- Nav -->
+    {% include "nav.html" %}
+    
+    <div class="container mt-5">
+        <h3>User Profile</h3>
+
+        <form class="row g-3 mt-1" action="{% url 'updateprofile' %}" method = "POST">
+            {% csrf_token %}
+        <div class="row mt-5">
+            <div class="col-md-3 text-center border-end">
+                <div class="mt-1">
+                    <img src="/{{ user.userprofile.Image }}" class="w-100" alt="PP">
+                </div>
+
+                <h6 class="mt-3">{{ user.first_name }} {{ user.last_name }}</h6>
+                <h6 class="text-secondary">{{ user.email }}</h6>
+            </div>
+
+            <div class="col border-end">
+                <h5>Personal Information</h5>
+
+                {% comment %} <form class="row g-3 mt-1" action="{% url 'updateprofile' %}" method = "POST"> {% endcomment %}
+                    <div class="col-md-6">
+                        <label for="firstname" class="form-label">First Name</label>
+                        <input type="text" class="form-control" name="firstname" id="firstname" value="{{ user.first_name }}">
+                    </div>
+
+                    <div class="col-md-6">
+                        <label for="lastname" class="form-label">Last Name</label>
+                        <input type="text" class="form-control" name="lastname" id="lastname" value="{{ user.last_name }}">
+                    </div>
+
+                    <div class="col-12">
+                        <label for="number" class="form-label">Phone Number</label>
+                        <input type="number" class="form-control" name="number" id="number" value="{{ user.userprofile.Phone_Number }}">
+                    </div>
+
+                    <div class="col-12">
+                        <label for="emailaddress" class="form-label">Email Address</label>
+                        <input type="email" class="form-control" name="email" id="emailaddress" value="{{ user.email}}">
+                    </div>
+
+                    <div class="col-md-12">
+                        <label for="address" class="form-label">Address</label>
+                        <input type="text" class="form-control" name="address" id="address" value="{{ user.userprofile.Country }}">
+                    </div>
+
+                    <div class="form-group mb-3">
+                        <label for="profile" class="form-label">Profile Picture</label>
+                        <div class="input-group">
+                            <input type="file" class="form-control" name = "image" id="profile" value="/{{ user.userprofile.Image }}">
+                        </div>
+                    </div> 
+                    {% comment %} <div class="d-flex justify-content-center mt-5">
+                        <button type="submit" class="btn btn-primary px-5 pb-2">Save Profile</button>
+                        <input type="submit" class="btn btn-primary px-5 pb-2" value="Save Profile">
+                    </div>                    {% endcomment %}
+                {% comment %} </form> {% endcomment %}
+            </div>
+
+            <div class="col-md-3">
+                <h5>Billing Address</h5>
+
+                {% comment %} <form class="row g-3 mt-1" action="{% url 'updatebilling' %}" method = "POST"> {% endcomment %}
+                    <div class="col-md-12">
+                        <label for="province" class="form-label">Province</label>
+                        <select class="form-select" name="province" id="province">
+                            <option value="{{ user.userprofile.Province }}">{{ user.userprofile.Province }}</option>
+                            <option value="Bagmati">Bagmati</option>
+                            <option value="Gandaki">Gandaki</option>
+                            <option value="Karnali">Karnali</option>
+                            <option value="Koshi">Koshi</option>
+                            <option value="Lumbini">Lumbini</option>
+                            <option value="Madesh">Madesh</option>
+                            <option value="Sudurpashchim">Sudurpashchim</option>
+                        </select>
+                    </div>
+
+                    <div class="col-md-12">
+                        <label for="city" class="form-label">City</label>
+                        <input type="text" class="form-control" name="city" id="city" value="{{ user.userprofile.City }}">
+                    </div>
+
+                    <div class="col-md-12">
+                        <label for="area" class="form-label">Area</label>
+                        <input type="text" class="form-control" name="area" id="area" value="{{ user.userprofile.Area }}">
+                    </div>
+
+                    <div class="col-md-12">
+                        <label for="landmark" class="form-label">Landmark</label>
+                        <input type="text" class="form-control"  name="landmark" id="landmark" value="{{ user.userprofile.Landmark }}">
+                    </div>
+                {% comment %} </form> {% endcomment %}
+            </div>
+        </div>
+        
+        <div class="d-flex justify-content-center mt-5">
+            {% comment %} <button type="submit" class="btn btn-primary px-5 pb-2">Save Profile</button> {% endcomment %}
+            <input type="submit" class="btn btn-primary px-5 pb-2" value="Save Billing">
+        </div>
+    </form>
+    </div>
+    {% include "footer.html" %}
+    <script src="../static/js/script.js"></script>
+
+    {% comment %} <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script> {% endcomment %}
+
+</body>
+</html>

@@ -131,3 +131,8 @@ nav .search-form label{
 nav .search-form label:hover{
   color: var(--secondary);
 }
+
+.dropdown-item.active {
+  background-color: #0b3b47; /* Change this to your preferred color */
+  color: white; /* Change this to your preferred text color */
+}
