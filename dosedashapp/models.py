@@ -33,6 +33,7 @@ class Transaction(models.Model):
     User_Details = models.ForeignKey(User, on_delete=models.CASCADE, null= True, blank= True)
     Transaction_Status = models.CharField(max_length = 300)
     Item_Pruchased = models.ManyToManyField(Product, blank = True)
+    Payment_Method = models.CharField(max_length = 300, blank=True)
     
     def __str__(self):
         return self.User_Details.username + " - " + self.Transaction_ID

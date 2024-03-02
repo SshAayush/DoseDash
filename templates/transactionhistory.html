@@ -25,36 +25,36 @@
                         <tr class="fw-semibold">
                             <td scope="col">Transaction ID</td>
                             <td scope="col">Product Name</td>
-                            <td scope="col">Quantity</td>
                             <td scope="col">Total</td>
                             <td scope="col">Payment Method</td>
                         </tr>
                     </thead>
 
                     <tbody>
+                        {% comment %} {% for transaction in transactions %}
                         <tr>
-                            <td scope="row">XYZ789</td>
-                            <td>Viagra</td>
-                            <td>5</td>
-                            <td>1500</td>
+                            <td scope="row">{{ transaction.Transaction_ID }}</td>
+                            <td>{{ transaction.Item_Pruchased.Product_Name }}</td>
+                            <td>{{ transaction.Transaction_ID }}</td>
+                            <td>{{ transaction.Transaction_Amount }}</td>
                             <td>Khalti</td>
                         </tr>
-                        
-                        <tr>
-                            <td scope="row">PQR987</td>
-                            <td>Manforce Condom</td>
-                            <td>10</td>
-                            <td>1500</td>
-                            <td>PayPal</td>
-                        </tr>
+                        {% endfor %} {% endcomment %}
 
-                        <tr>
-                            <td scope="row">DEF321</td>
-                            <td>Manforce Condom</td>
-                            <td>10</td>
-                            <td>2500</td>
-                            <td>eSewa</td>
-                        </tr>
+                        {% for transaction in transactions %}
+                            <tr>
+                                <td scope="row">{{ transaction.Transaction_ID }}</td>
+                                <td>
+                                    {% for product in transaction.Item_Pruchased.all %}
+                                        {{ product.Product_Name }}{% if not forloop.last %}, {% endif %}
+                                    {% empty %}
+                                        No products purchased
+                                    {% endfor %}
+                                </td>
+                                <td>{{ transaction.Transaction_Amount }}</td>
+                                <td>{{ transaction.Payment_Method }}</td>
+                            </tr>
+                        {% endfor %}
                     </tbody>
                 </table>
             </div>

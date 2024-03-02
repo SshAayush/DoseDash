@@ -12,6 +12,8 @@ from django.db.models import Q
 from random import sample
 from django.db.models.signals import post_save
 from django.dispatch import receiver
+from django.contrib.auth.decorators import login_required
+from django.contrib.auth.hashers import check_password, make_password
 
 # used to send mail
 from django.core.mail import EmailMultiAlternatives
@@ -25,16 +27,11 @@ def landingPage(request):
     all_meds = list(Product.objects.filter(Product_Tag = 1))
     medicine = sample(all_meds, 4)
     
-     # product_tag = 2 -> "featured" because the id of featured tag is 1
-    all_featured = list(Product.objects.filter(Product_Tag = 2))
-    featured = sample(all_featured, 4)
-    
     return render(request, 'landingpage.html', {'meds' : medicine,
-                                                'featured' : featured,
+                                                'featured' : getFeatured(),
                                                 })
 
-@receiver(post_save, sender=User)
-def signup(request,instance, created, **kwargs):
+def signup(request):
     if request.user.is_authenticated:
         print("ALready logged in.")
         return redirect('landingPage')
@@ -58,11 +55,14 @@ def signup(request,instance, created, **kwargs):
             else:
                 user = User.objects.create_user(username=username, password=password, email=email, first_name=fname, last_name=lname)
                 user.save()
-                if created:
-                    UserProfile.objects.create(user=instance)
                 print('user created')
                 return redirect('signin')
     return render (request, 'signup.html', {})
+
+@receiver(post_save, sender=User)
+def create_user_profile(sender, instance, created, **kwargs):
+    if created:
+        UserProfile.objects.create(user=instance)
 
 @receiver(post_save, sender=User)
 def save_user_profile(sender, instance,**kwargs):
@@ -90,7 +90,9 @@ def signin(request):
 
 def shop(request):
     shop = Product.objects.all()
+    
     return render(request, "shop.html", {'products' : shop,
+                                         'featured' : getFeatured(),
                                          })
 
 def product(request,pk):
@@ -107,6 +109,7 @@ def product(request,pk):
         'product': product,
         'user_id' : user_id,
         'reminder' : reminder,
+        'featured' : getFeatured(),
     })
     
 def cart(request):
@@ -121,8 +124,10 @@ def cart(request):
     return render(request, "cart.html", {'carts' : carts,
                                          'subTotal' : subTotal,
                                          'uuid' : uuid_value,
+                                         'featured' : getFeatured(),
                                          })
 
+@login_required
 def addCart(request):
      if request.method == "POST":
         quantity = int(request.POST["quantity"])
@@ -161,6 +166,7 @@ def addCart(request):
         
         return redirect('shop')
 
+@login_required
 def removeCart(request,pk):
     user_id = request.user.id
     
@@ -171,6 +177,7 @@ def removeCart(request,pk):
         cart.delete()  # Delete the cart item from the database
     return redirect('cart')
 
+@login_required
 def checkout(request):
     if request.method == "POST":
         subTotal = request.POST["subTotal"]
@@ -227,7 +234,7 @@ def checkout(request):
     products = [cart.Cart_Details for cart in carts]
 
     
-    transaction = Transaction(Transaction_ID=transaction_id, Transaction_Amount=rupees, User_Details=User.objects.get(id=user.id),Transaction_Date=datetime.now())
+    transaction = Transaction(Transaction_ID=transaction_id, Transaction_Amount=rupees, User_Details=User.objects.get(id=user.id),Transaction_Date=datetime.now(),Payment_Method = "Khalti")
     transaction.save()
     transaction.Item_Pruchased.add(*products)
     transaction.save()
@@ -235,6 +242,7 @@ def checkout(request):
     return redirect(new_res['payment_url'])
     # return HttpResponse(response.text, content_type="application/json")
 
+@login_required
 def success(request):
     pidx = request.GET['pidx']
     payment_status = request.GET['status']
@@ -286,6 +294,7 @@ def success(request):
         print("Not a valid payment.")
         return HttpResponse("Unauthorized access or transaction not found.", status=401)
 
+@login_required
 def addreminder(request,pk):
     user = request.user
     product = Product.objects.get(id = pk)
@@ -293,6 +302,7 @@ def addreminder(request,pk):
     reminder.save()
     return redirect("product",pk=pk)
 
+@login_required
 def sendReminder(request):
     reminder = Reminder.objects.all()
     threshold_date = timezone.now() - timedelta(hours=1)
@@ -337,12 +347,12 @@ def contactUs(request):
         contact = ContactUs(Customer_Name=name, Customer_Email=email, Customer_Message=message)
         contact.save()
         # return render('contactus')
-    return render(request,"contactus.html",{})
+    return render(request,"contactus.html",{'featured' : getFeatured(),
+                                            })
 
 def logOut(request):
     logout(request)
     return redirect('landingPage')
-
 
 def search(request):
     if request.method == "POST":
@@ -357,20 +367,55 @@ def search(request):
                                                 })
         
         return render(request, "shop.html", {'search':products,
-                                                })
+                                             'featured' : getFeatured(),
+                                            })
         
     return render(request, "shop.html")
 
+@login_required
 def changePassword(request):
-    return render(request, "changepassword.html")
+    if request.method == "POST":
+        oldPassword = request.POST['oldPassword']
+        newPassword = request.POST['newPassword']
+        confirmPassword = request.POST['confirmPassword']
+        
+        user = request.user
+        if check_password(oldPassword, user.password):
+                if newPassword == confirmPassword and newPassword != "":
+                    if not check_password(newPassword, user.password):
+                        user.password = make_password(newPassword)
+                        user.save()
+                        print("Password Updated")
+                        return redirect("signin")
+                    else:
+                        return render(request, "changepassword.html", {
+                            "message" : "Password cannot be same with old one",
+                            'featured' : getFeatured(),
+                        })
+                else:
+                    return render(request, "changepassword.html", {
+                            "message" : "Confirm password didnot match / password cannot be empty",
+                            'featured' : getFeatured(),
+                        })
+        else:
+            return render(request, "changepassword.html", {
+                        "message" : "Current password didnot matched",
+                        'featured' : getFeatured(),
+                    })
+        
+    return render(request, "changepassword.html",{'featured' : getFeatured(),
+                                                  })
 
+@login_required
 def profile(request):
     user = request.user
     
     phone_number = user.userprofile.Phone_Number
-    return render(request, "profile.html", {'user':user
+    return render(request, "profile.html", {'user':user,
+                                            'featured' : getFeatured(),
                                             })
 
+@login_required
 def updateprofile(request):
     user = request.user
     
@@ -380,11 +425,17 @@ def updateprofile(request):
         number = request.POST['number']
         email = request.POST['email']
         country = request.POST['address']
-        image = request.POST['image']
+        image = request.FILES.get('image')
         province = request.POST['province']
         city = request.POST['city']
         area = request.POST['area']
         landmark = request.POST['landmark']
+        
+        user.first_name = fname
+        user.last_name = lname
+        user.email = email
+
+        user.save()
         
         user_profile = UserProfile.objects.get(user__id=user.id)
          # Update the fields
@@ -396,25 +447,37 @@ def updateprofile(request):
         user_profile.Landmark = landmark
         
         # Handle the image upload
+        
         if 'image' in request.FILES:
             user_profile.Image = request.FILES['image']
         # If the image field is not provided, keep the existing image
         
         # Save the changes
-        user_profile.save()        
+        user_profile.save()
     
-    return render(request, "profile.html", {'user':user
+    return render(request, "profile.html", {'user':user,
+                                            'featured' : getFeatured(),
                                             })
 
+@login_required
 def updatebilling(request):
     user = request.user
-    return render(request, "profile.html", {'user':user
-                                            })
+    return render(request, "profile.html", {'user':user,
+                                            'featured' : getFeatured(),
+                                           })
 
+@login_required
 def transactionHistory(request):
-    return render(request, "transactionhistory.html")
-
-
+    user = request.user
+    transactions = Transaction.objects.filter(User_Details = user)
+    return render(request, "transactionhistory.html",{'transactions':transactions,
+                                                      'featured' : getFeatured(),
+                                                      })
+def getFeatured():
+    # product_tag = 2 -> "featured" because the id of featured tag is 2
+    all_featured = list(Product.objects.filter(Product_Tag = 2))
+    featured = sample(all_featured, 4)
+    return(featured)
 
 def test(request):
     user_id = request.user.id
