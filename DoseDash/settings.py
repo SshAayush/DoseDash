@@ -31,7 +31,6 @@ DEBUG = True
 # ALLOWED_HOSTS = []
 ALLOWED_HOSTS = ['*']
 
-
 # Application definition
 
 INSTALLED_APPS = [
@@ -44,6 +43,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'dosedashapp',
     'mathfilters',
+    'django_crontab',
 ]
 
 MIDDLEWARE = [
@@ -160,3 +160,12 @@ STATICFILES_DIRS = [STATIC_DIR]
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 #SMTP Configuration
+
+
+
+#cornjobs
+CRONJOBS = [
+    ('0 17 * * *', 'dosedashapp.cron.print_hello')
+    # ('*/1 * * * *', 'dosedashapp.views.sendReminder'),
+    # ('0 17 * * *', 'dosedashapp.views.sendReminder'),
+]

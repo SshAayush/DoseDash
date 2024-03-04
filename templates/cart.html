@@ -7,6 +7,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Cart</title>
 
+	<!-- Favicon -->
+	<link rel="icon" type="image/png" href="{% static 'image/logo/logo.png' %}"> 
+
     <!-- Style CSS -->
     <link rel="stylesheet" href="{% static 'css/cart.css' %}">
 
@@ -80,7 +83,11 @@
 					<!-- Other form fields go here -->
 				</form>
 				{% if request.user.is_authenticated %}
-				<a class="bth-checkout" id="checkoutButton">Checkout</a>
+				{% if subTotal != 0 %}
+					<a class="bth-checkout" id="checkoutButton">Checkout</a>
+				{% else %}
+					<a class="bth-checkout" id="cB" disabled>Checkout</a>
+				{% endif %}
                 {% endif %}
 			</div>
 

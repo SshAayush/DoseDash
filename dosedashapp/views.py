@@ -210,7 +210,7 @@ def checkout(request):
         "customer_info": {
         "name": user.username,
         "email": user.email,
-        "phone": "9800000001"
+        "phone": user.userprofile.Phone_Number
         }
     })
     headers = {
@@ -311,6 +311,8 @@ def sendReminder(request):
     sendReminder = Reminder.objects.filter(Reminder_Date__lt=threshold_date)
     print(sendReminder)
     
+    
+    
     emails = []
 
     for reminder in sendReminder:
@@ -321,7 +323,7 @@ def sendReminder(request):
         html_content = render_to_string('offer_mail.html',{
                                         'fname': reminder.Reminder_UserName.first_name, 
                                         'lname': reminder.Reminder_UserName.last_name, 
-                                        'email': emails,
+                                        'email': reminder.Reminder_UserName.email,
                                         })
         from_email = 'xayush.tc@gmail.com'
         print(reminder.Reminder_UserName.first_name)
@@ -336,6 +338,10 @@ def sendReminder(request):
         )
         email.attach_alternative(html_content, "text/html")
         email.send(fail_silently=False)
+        
+        # Update the reminder date AND time
+        reminder.Reminder_Date = timezone.now() # Corrected line
+        reminder.save()
     return redirect('landingPage')
 
 def contactUs(request):
