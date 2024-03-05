@@ -18,10 +18,12 @@ urlpatterns = [
     path('addreminder/<str:pk>/', views.addreminder, name="addreminder"),
     path('contactus/', views.contactUs, name="contactus"),
     path('sendReminder/', views.sendReminder, name="sendReminder"),
-    path('search/', views.search, name="search"),
     path('changePassword/', views.changePassword, name="changePassword"),
+    path('search/', views.search, name="search"),
     path('profile/', views.profile, name="profile"),
     path('transactionHistory/', views.transactionHistory, name="transactionHistory"),
     path('updateprofile/', views.updateprofile, name="updateprofile"),
+    path('viewreminder/', views.viewReminder, name="viewreminder"),
+    path('deletereminder/<str:pk>', views.deleteReminder, name="deletereminder"),
     path('t/', views.test, name="test"),
 ]

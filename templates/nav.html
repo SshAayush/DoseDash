@@ -45,6 +45,7 @@
                     <a class="dropdown-item {% if request.resolver_match.url_name == 'profile' %}active{% endif %}" href="{% url 'profile' %}">Profile</a>
                      <a class="dropdown-item {% if request.resolver_match.url_name == 'changePassword' %}active{% endif %}" href="{% url 'changePassword' %}">Change Password</a>
                      <a class="dropdown-item {% if request.resolver_match.url_name == 'transactionHistory' %}active{% endif %}" href="{% url 'transactionHistory' %}">Transaction History</a>
+                     <a class="dropdown-item {% if request.resolver_match.url_name == 'viewreminder' %}active{% endif %}" href="{% url 'viewreminder' %}">Reminders</a>
                      {% comment %} <li class="nav-item"> {% endcomment %}
                       {% if request.user.is_authenticated %}
                       <a class="dropdown-item" aria-current="page" href="{% url "logout" %}">Log Out</a>

@@ -163,9 +163,11 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 
 
+
 #cornjobs
 CRONJOBS = [
-    ('0 17 * * *', 'dosedashapp.cron.print_hello')
-    # ('*/1 * * * *', 'dosedashapp.views.sendReminder'),
-    # ('0 17 * * *', 'dosedashapp.views.sendReminder'),
+    # ('* * * * *', 'dosedashapp.cron.print_hello'),
+    # ('* * * * *', 'dosedashapp.cron.sendReminder'),
+    # ('* * * * *', 'dosedashapp.views.print_hello'),
+    ('* * * * *', 'dosedashapp.views.sendReminder'),
 ]

@@ -69,3 +69,4 @@ class UserProfile(models.Model):
 
 class Category(models.Model):
     category_name = models.DateTimeField()
+    test = models.CharField(max_length=200, blank=True, null=True)

@@ -2,7 +2,7 @@ from django.shortcuts import render
 from django.shortcuts import redirect
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login, logout
-from .models import Product,Cart,Transaction, Reminder, ContactUs,ProductTag,UserProfile
+from .models import Product,Cart,Transaction, Reminder, ContactUs,ProductTag,UserProfile,Category
 from django.shortcuts import redirect
 import uuid, requests, json
 from django.http import HttpResponse
@@ -19,6 +19,17 @@ from django.contrib.auth.hashers import check_password, make_password
 from django.core.mail import EmailMultiAlternatives
 from django.template.loader import render_to_string
 from django.utils.html import strip_tags
+
+import random
+
+
+def print_hello():
+    number = random.randint(0,100)
+    product = Category(category_name=datetime.now())
+    product.save()
+    # logging.info(f'Updated reminder date for: ')
+    
+    # logging.info('sendReminder method completed')
 
 # Create your views here.
 def landingPage(request):
@@ -304,6 +315,8 @@ def addreminder(request,pk):
 
 @login_required
 def sendReminder(request):
+    product = Category(category_name=datetime.now())
+    product.save()
     reminder = Reminder.objects.all()
     threshold_date = timezone.now() - timedelta(hours=1)
     print(threshold_date)
@@ -311,7 +324,8 @@ def sendReminder(request):
     sendReminder = Reminder.objects.filter(Reminder_Date__lt=threshold_date)
     print(sendReminder)
     
-    
+    product = Category(test= "aayo haii aayo")
+    product.save()  #used for cron
     
     emails = []
 
@@ -340,7 +354,7 @@ def sendReminder(request):
         email.send(fail_silently=False)
         
         # Update the reminder date AND time
-        reminder.Reminder_Date = timezone.now() # Corrected line
+        reminder.Reminder_Date = timezone.now()
         reminder.save()
     return redirect('landingPage')
 
@@ -475,10 +489,23 @@ def updatebilling(request):
 @login_required
 def transactionHistory(request):
     user = request.user
-    transactions = Transaction.objects.filter(User_Details = user)
+    transactions = Transaction.objects.filter(User_Details = user.id)
     return render(request, "transactionhistory.html",{'transactions':transactions,
                                                       'featured' : getFeatured(),
                                                       })
+    
+def viewReminder(request):
+    user = request.user
+    reminders = Reminder.objects.filter(Reminder_UserName = user)
+    return render(request, "reminder.html",{'reminders':reminders,
+                                            'featured' : getFeatured(),
+                                             })
+
+def deleteReminder(request,pk):
+    reminders = Reminder.objects.get(id = pk)
+    reminders.delete()
+    return redirect('viewreminder')
+
 def getFeatured():
     # product_tag = 2 -> "featured" because the id of featured tag is 2
     all_featured = list(Product.objects.filter(Product_Tag = 2))
