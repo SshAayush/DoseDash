@@ -53,6 +53,8 @@ After setting up the project, you can access the website by navigating to `http:
 
 ## Contact
 
-Your Name - xayush.dc@gmail.com
+Name: Aayush Timalsina
+
+Email - xayush.dc@gmail.com
 
 Project Link: https://github.com/SshAayush/DoseDash
