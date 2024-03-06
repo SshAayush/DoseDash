@@ -1,3 +1,4 @@
+import os, django, logging
 from django.shortcuts import render
 from django.shortcuts import redirect
 from django.contrib.auth.models import User
@@ -24,12 +25,13 @@ import random
 
 
 def print_hello():
-    number = random.randint(0,100)
-    product = Category(category_name=datetime.now())
+    os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'dosedashapp.settings')
+    django.setup()
+
+    print("kata xau hami")
+    product = Category(category_name=timezone.now(),test= "aayo haii aayo")
+
     product.save()
-    # logging.info(f'Updated reminder date for: ')
-    
-    # logging.info('sendReminder method completed')
 
 # Create your views here.
 def landingPage(request):
@@ -313,34 +315,32 @@ def addreminder(request,pk):
     reminder.save()
     return redirect("product",pk=pk)
 
-@login_required
-def sendReminder(request):
-    product = Category(category_name=datetime.now())
-    product.save()
+
+def sendReminder():
+    # Assuming Category and Reminder models are imported correctly
+    test = Category(category_name=timezone.now(), test="mathi xa")
+    test.save()
+    
     reminder = Reminder.objects.all()
     threshold_date = timezone.now() - timedelta(hours=1)
-    print(threshold_date)
     
     sendReminder = Reminder.objects.filter(Reminder_Date__lt=threshold_date)
-    print(sendReminder)
-    
-    product = Category(test= "aayo haii aayo")
-    product.save()  #used for cron
     
     emails = []
-
+    
     for reminder in sendReminder:
-    # user = Customer.objects.get(customer_email = email)
+        test2 = Category(category_name=timezone.now(), test="For vitra xiryo")
+        test2.save()
+        
         emails.append(reminder.Reminder_UserName.email)
         
         subject = "Time to Order Your Medication from DoseDash"
-        html_content = render_to_string('offer_mail.html',{
-                                        'fname': reminder.Reminder_UserName.first_name, 
-                                        'lname': reminder.Reminder_UserName.last_name, 
-                                        'email': reminder.Reminder_UserName.email,
-                                        })
+        html_content = render_to_string('offer_mail.html', {
+            'fname': reminder.Reminder_UserName.first_name, 
+            'lname': reminder.Reminder_UserName.last_name, 
+            'email': reminder.Reminder_UserName.email,
+        })
         from_email = 'xayush.tc@gmail.com'
-        print(reminder.Reminder_UserName.first_name)
         to = [reminder.Reminder_UserName.email]
 
         text_content = strip_tags(html_content)
@@ -356,7 +356,13 @@ def sendReminder(request):
         # Update the reminder date AND time
         reminder.Reminder_Date = timezone.now()
         reminder.save()
-    return redirect('landingPage')
+    
+    test1 = Category(category_name=timezone.now(), test="aayooooo")
+    test1.save()
+    
+    # Since this is a Celery task, we can't return a redirect.
+    # You might want to log a success message or handle the outcome differently.
+    print("Reminder sent successfully.")
 
 def contactUs(request):
     if request.method == "POST":
