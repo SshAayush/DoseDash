@@ -22,10 +22,24 @@ This project is a pharmacy eCommerce website built using Django and SQLite. It f
 
 1. Clone the repository: git clone [https://github.com/yourusername/pharmacy-ecommerce.git](https://github.com/SshAayush/DoseDash.git)https://github.com/SshAayush/DoseDash.git
 2. Navigate to the project directory: cd DoseDash
-3. Install the environment(pip/conda)
+3. Install the environment(conda)
 4. Apply migrations to set up the database: python manage.py migrate
 5. Create a superuser for the admin dashboard (optional): python manage.py createsuperuser
 6. Run the development server: python manage.py runserver
+
+## Setting up Environment
+
+You can use the requirements.txt file to recreate the environment or install the packages in another environment. To create a new environment with the packages listed in requirements.txt, you can use:
+
+**Use the requirements.txt File**
+```
+conda create --name new_environment_name --file requirements.txt
+```
+
+**To install the packages in an existing environment, you can use:**
+```
+conda install --file requirements.txt
+```
 
 ## Usage
 
