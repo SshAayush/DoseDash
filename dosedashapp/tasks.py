@@ -12,31 +12,30 @@ from datetime import datetime,timedelta
 
 @shared_task
 def sendReminder():
-    # Assuming Category and Reminder models are imported correctly
-    test = Category(category_name=timezone.now(), test="mathi xa")
-    test.save()
-    
-    reminder = Reminder.objects.all()
     threshold_date = timezone.now() - timedelta(hours=1)
     
-    sendReminder = Reminder.objects.filter(Reminder_Date__lt=threshold_date)
+    #IDs of the users who have reminders older than the threshold date
+    user_ids_with_reminders = Reminder.objects.filter(Reminder_Date__lt=threshold_date).values_list('Reminder_UserName_id', flat=True).distinct()
     
-    emails = []
-    
-    for reminder in sendReminder:
-        test2 = Category(category_name=timezone.now(), test="For vitra xiryo")
-        test2.save()
+    #for each user get their reminders and aggregate products
+    for user_id in user_ids_with_reminders:
+        user_reminders = Reminder.objects.filter(Reminder_UserName_id=user_id).select_related('Reminder_UserName')
+        user_email = user_reminders.first().Reminder_UserName.email
+        user_first_name = user_reminders.first().Reminder_UserName.first_name
+        user_last_name = user_reminders.first().Reminder_UserName.last_name
         
-        emails.append(reminder.Reminder_UserName.email)
+        # This is a placeholder to get all products for the user
+        products = user_reminders.values_list('Reminder_ProductId__Product_Name', flat=True)
         
         subject = "Time to Order Your Medication from DoseDash"
         html_content = render_to_string('offer_mail.html', {
-            'fname': reminder.Reminder_UserName.first_name, 
-            'lname': reminder.Reminder_UserName.last_name, 
-            'email': reminder.Reminder_UserName.email,
+            'fname': user_first_name, 
+            'lname': user_last_name, 
+            'email': user_email,
+            'products': list(products), # Convert to list to ensure it's iterable
         })
         from_email = 'xayush.tc@gmail.com'
-        to = [reminder.Reminder_UserName.email]
+        to = [user_email]
 
         text_content = strip_tags(html_content)
         email = EmailMultiAlternatives(
@@ -48,11 +47,6 @@ def sendReminder():
         email.attach_alternative(html_content, "text/html")
         email.send(fail_silently=False)
         
-        # Update the reminder date AND time
-        reminder.Reminder_Date = timezone.now()
-        reminder.save()
-    
-    test1 = Category(category_name=timezone.now(), test="aayooooo")
-    test1.save()
-    
+        # Update the reminder date AND time for all reminders of this user
+        Reminder.objects.filter(Reminder_UserName_id=user_id).update(Reminder_Date=timezone.now())
     print("Reminder sent successfully.")

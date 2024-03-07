@@ -162,7 +162,6 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 #SMTP Configuration
 
 
-
 #cornjobs
 CRONJOBS = [
     # ('* * * * *', 'dosedashapp.cron.print_hello'),

@@ -9,11 +9,13 @@ import uuid, requests, json
 from django.http import HttpResponse
 from datetime import datetime,timedelta
 from django.utils import timezone
-from django.db.models import Q
+from django.db.models import Q,Count
 from random import sample
 from django.db.models.signals import post_save
 from django.dispatch import receiver
 from django.contrib.auth.decorators import login_required
+from django.contrib.admin.views.decorators import staff_member_required
+
 from django.contrib.auth.hashers import check_password, make_password
 
 # used to send mail
@@ -23,15 +25,6 @@ from django.utils.html import strip_tags
 
 import random
 
-
-def print_hello():
-    os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'dosedashapp.settings')
-    django.setup()
-
-    print("kata xau hami")
-    product = Category(category_name=timezone.now(),test= "aayo haii aayo")
-
-    product.save()
 
 # Create your views here.
 def landingPage(request):
@@ -315,33 +308,32 @@ def addreminder(request,pk):
     reminder.save()
     return redirect("product",pk=pk)
 
-
-def sendReminder():
-    # Assuming Category and Reminder models are imported correctly
-    test = Category(category_name=timezone.now(), test="mathi xa")
-    test.save()
-    
-    reminder = Reminder.objects.all()
+@staff_member_required
+def sendReminder(request):
     threshold_date = timezone.now() - timedelta(hours=1)
     
-    sendReminder = Reminder.objects.filter(Reminder_Date__lt=threshold_date)
+    # Get the IDs of the users who have reminders older than the threshold date
+    user_ids_with_reminders = Reminder.objects.filter(Reminder_Date__lt=threshold_date).values_list('Reminder_UserName_id', flat=True).distinct()
     
-    emails = []
-    
-    for reminder in sendReminder:
-        test2 = Category(category_name=timezone.now(), test="For vitra xiryo")
-        test2.save()
+    #for each user get their reminders and aggregate products
+    for user_id in user_ids_with_reminders:
+        user_reminders = Reminder.objects.filter(Reminder_UserName_id=user_id).select_related('Reminder_UserName')
+        user_email = user_reminders.first().Reminder_UserName.email
+        user_first_name = user_reminders.first().Reminder_UserName.first_name
+        user_last_name = user_reminders.first().Reminder_UserName.last_name
         
-        emails.append(reminder.Reminder_UserName.email)
+        # This is a placeholder to get all products for the user
+        products = user_reminders.values_list('Reminder_ProductId__Product_Name', flat=True)
         
         subject = "Time to Order Your Medication from DoseDash"
         html_content = render_to_string('offer_mail.html', {
-            'fname': reminder.Reminder_UserName.first_name, 
-            'lname': reminder.Reminder_UserName.last_name, 
-            'email': reminder.Reminder_UserName.email,
+            'fname': user_first_name, 
+            'lname': user_last_name, 
+            'email': user_email,
+            'products': list(products), # Convert to list to ensure it's iterable
         })
         from_email = 'xayush.tc@gmail.com'
-        to = [reminder.Reminder_UserName.email]
+        to = [user_email]
 
         text_content = strip_tags(html_content)
         email = EmailMultiAlternatives(
@@ -353,15 +345,8 @@ def sendReminder():
         email.attach_alternative(html_content, "text/html")
         email.send(fail_silently=False)
         
-        # Update the reminder date AND time
-        reminder.Reminder_Date = timezone.now()
-        reminder.save()
-    
-    test1 = Category(category_name=timezone.now(), test="aayooooo")
-    test1.save()
-    
-    # Since this is a Celery task, we can't return a redirect.
-    # You might want to log a success message or handle the outcome differently.
+        # Update the reminder date AND time for all reminders of this user
+        Reminder.objects.filter(Reminder_UserName_id=user_id).update(Reminder_Date=timezone.now())
     print("Reminder sent successfully.")
 
 def contactUs(request):
@@ -522,30 +507,50 @@ def test(request):
     user_id = request.user.id
 
      # Retrieve carts belonging to the current user
-    carts = Cart.objects.filter(User_Details=request.user)
+    # carts = Cart.objects.filter(User_Details=request.user)
     
-    products = [cart.Cart_Details for cart in carts]
+    # products = [cart.Cart_Details for cart in carts]
 
-    # Create a Transaction instance
-    transaction = Transaction.objects.create(
-        Transaction_ID="100",  # Assuming Transaction_ID is a string field
-        Transaction_Amount=100,
-        User_Details=request.user,  # Use the current user
-        Transaction_Date=datetime.now()
-    )
+    # # Create a Transaction instance
+    # transaction = Transaction.objects.create(
+    #     Transaction_ID="100",  # Assuming Transaction_ID is a string field
+    #     Transaction_Amount=100,
+    #     User_Details=request.user,  # Use the current user
+    #     Transaction_Date=datetime.now()
+    # )
 
-    # Add carts to the many-to-many field of the Transaction instance
-    # transaction.Item_Pruchased.add(*carts)
-    transaction.Item_Pruchased.add(*products)
-    transaction.save()
+    # # Add carts to the many-to-many field of the Transaction instance
+    # # transaction.Item_Pruchased.add(*carts)
+    # transaction.Item_Pruchased.add(*products)
+    # transaction.save()
 
-    # print(cart.values_list('id', flat=True))
-
-
-    # Assuming each user can have only one cart
-    # cart = Cart.objects.filter(User_Details=user_id)
-    # for c in cart:
-    #     print(c.Cart_Details.Product_Name)
+    threshold_date = timezone.now() - timedelta(hours=1)
     
+    # First, get the IDs of the users who have reminders older than the threshold date
+    user_ids_with_reminders = Reminder.objects.filter(Reminder_Date__lt=threshold_date).values_list('Reminder_UserName_id', flat=True).distinct()
     
-    return redirect('landingPage')
+    # Then, for each user, get their reminders and aggregate products
+    for user_id in user_ids_with_reminders:
+        user_reminders = Reminder.objects.filter(Reminder_UserName_id=user_id).select_related('Reminder_UserName')
+        user_email = user_reminders.first().Reminder_UserName.email
+        user_first_name = user_reminders.first().Reminder_UserName.first_name
+        user_last_name = user_reminders.first().Reminder_UserName.last_name
+        
+        # Assuming you have a way to get all products for a user in a single query
+        # This is a placeholder for your actual logic to get all products for the user
+        products = user_reminders.values_list('Reminder_ProductId__Product_Name', flat=True)
+        
+        subject = "Time to Order Your Medication from DoseDash"
+        html_content = render_to_string('offer_mail.html', {
+            'fname': user_first_name, 
+            'lname': user_last_name, 
+            'email': user_email,
+            'products': list(products), # Convert to list to ensure it's iterable
+        })
+        
+        return render(request, 'offer_mail.html', {'fname': user_first_name, 
+            'lname': user_last_name, 
+            'email': user_email,
+            'products': list(products),
+            })
+    # return redirect('landingPage')
