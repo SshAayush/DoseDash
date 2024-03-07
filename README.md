@@ -49,7 +49,14 @@ After setting up the project, you can access the website by navigating to `http:
 - **Product Listing**: Browse products by navigating to `/shop/`.
 - **Shopping Cart**: Add products to your cart and view it at `/cart/`.
 - **Reminders**: Set reminders for product purchases through the user dashboard.
-
+  
+  **To start a Celery Task start beat and worker task**:
+  ```
+  celery -A DoseDash beat --loglevel=info
+  ```
+  ```
+  celery -A DoseDash worker --loglevel=info
+  ```
 
 ## Contact
 
