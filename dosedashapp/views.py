@@ -3,7 +3,7 @@ from django.shortcuts import render
 from django.shortcuts import redirect
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login, logout
-from .models import Product,Cart,Transaction, Reminder, ContactUs,ProductTag,UserProfile,Category
+from .models import Product,Cart,Transaction, Reminder, ContactUs,ProductTag,UserProfile
 from django.shortcuts import redirect
 import uuid, requests, json
 from django.http import HttpResponse

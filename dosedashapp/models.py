@@ -67,6 +67,6 @@ class UserProfile(models.Model):
     def __str__(self):
         return self.user.username
 
-class Category(models.Model):
-    category_name = models.DateTimeField()
-    test = models.CharField(max_length=200, blank=True, null=True)
+# class Category(models.Model):
+#     category_name = models.DateTimeField()
+#     test = models.CharField(max_length=200, blank=True, null=True)

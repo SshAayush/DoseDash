@@ -1,151 +1,64 @@
-"use strict";
-
-
-function setError(element, errorMsg) {
-  const parent = element.parentElement;
-  const errorDiv = parent.querySelector(".error");
-  errorDiv.textContent = errorMsg;
-}
-
-function removeError(element) {
-  const parent = element.parentElement;
-  const errorDiv = parent.querySelector(".error");
-  errorDiv.textContent = "";
-}
-
-let isValid = true;
-
-function validateFirstName() {
-  const firstName = document.querySelector("#fname");
-  if (firstName.value === "" || firstName.value == null) {
-    setError(firstName, "Name cannot be empty");
-    return false;
-  } else if (/\d/.test(firstName.value)) {
-    setError(firstName, "Name cannot contain numbers");
-    return false;
-  } else {
-    removeError(firstName);
-    return true;
-  }
-}
-
-function validateLastName() {
-  const lastName = document.querySelector("#lname");
-  if (lastName.value === "" || lastName.value == null) {
-    setError(lastName, "Name cannot be empty");
-    return false;
-  } else if (/\d/.test(lastName.value)) {
-    setError(lastName, "Name cannot contain numbers");
-    return false;
-  } else {
-    removeError(lastName);
-    return true;
-  }
-}
-
-function validateUsername() {
-  const username = document.querySelector("#username");
-  if (username.value === "" || username.value == null) {
-    setError(username, "Username cannot be empty");
-    return false;
-  } else {
-    removeError(username);
-    return true;
-  }
-}
-
-function validateEmail() {
-  const email = document.querySelector("#email");
-  const emailPattern = /^[A-Za-z\._\-0-9]*[@][A-Za-z]*[\.][a-z]{2,4}$/;
-  if (email.value === "") {
-    setError(email, "Email cannot be empty");
-    return false;
-  } else if (!email.value.match(emailPattern)) {
-    setError(email, "Invalid email");
-    return false;
-  } else {
-    removeError(email);
-    return true;
-  }
-}
-
-function validatePassword() {
-  const password = document.querySelector("#password");
-  const passwordPattern = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]/;
-  if (password.value === "") {
-    setError(password, "Password cannot be empty");
-    return false;
-  } else if (password.value.length < 8) {
-    setError(password, "Password must be at least 8 characters");
-    return false;
-  } else if (!password.value.match(passwordPattern)) {
-    setError(
-      password,
-      "Password must contain at least 1 letter and 1 number"
-    );
-    return false;
-  } else {
-    removeError(password);
-    return true;
-  }
-}
-
-function validateConfirmPassword() {
-  const cPassword = document.querySelector("#c_password");
-  const password = document.querySelector("#password");
-  if (cPassword.value === "") {
-    setError(cPassword, "Password cannot be empty");
-    return false;
-  } else if (cPassword.value !== password.value) {
-    setError(cPassword, "Passwords do not match");
-    setError(password, "Passwords do not match");
-    return false;
-  } else {
-    removeError(cPassword);
-    return true;
-  }
-}
-
-function validate() {
-  isValid = true;
-  isValid = validateFirstName() && isValid;
-  isValid = validateLastName() && isValid;
-  isValid = validateUsername() && isValid;
-  isValid = validateEmail() && isValid;
-  isValid = validatePassword() && isValid;
-  isValid = validateConfirmPassword() && isValid;
-  return isValid;
-}
-
-const form = document.querySelector("#form");
-form.addEventListener("submit", (e) => {
-  if (!validate()) {
-    e.preventDefault();
-  }
-});
-
-// for show password
-
-const password = document.querySelectorAll(".password");
-const showPassword = document.querySelector(".fa-eye");
-
-console.log(showPassword);
-
-
-  showPassword.addEventListener("click", () => {
-    togglePassword();
+document.addEventListener('DOMContentLoaded', function () {
+  const form = document.getElementById('form');
+  const fname = document.getElementById('fname');
+  const lname = document.getElementById('lname');
+  const username = document.getElementById('username');
+  const email = document.getElementById('email');
+  const password = document.getElementById('password');
+  const c_password = document.getElementById('c_password');
+  const errorElements = document.querySelectorAll('.error');
+ 
+  form.addEventListener('submit', function (event) {
+     let isValid = true;
+ 
+     // Clear previous error messages
+     errorElements.forEach(function (error) {
+       error.textContent = '';
+     });
+ 
+     // Validate first name
+     if (fname.value.trim() === '') {
+       isValid = false;
+       fname.nextElementSibling.textContent = 'First name is required.';
+     }
+ 
+     // Validate last name
+     if (lname.value.trim() === '') {
+       isValid = false;
+       lname.nextElementSibling.textContent = 'Last name is required.';
+     }
+ 
+     // Validate username
+     if (username.value.trim() === '') {
+       isValid = false;
+       username.nextElementSibling.textContent = 'Username is required.';
+     }
+ 
+     // Validate email
+     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+     if (!emailRegex.test(email.value)) {
+       isValid = false;
+       email.nextElementSibling.textContent = 'Please enter a valid email address.';
+     }
+ 
+     // Validate password
+     if (password.value.trim() === '') {
+       isValid = false;
+       password.nextElementSibling.textContent = 'Password is required.';
+     }
+ 
+     // Validate confirm password
+     if (c_password.value.trim() === '') {
+       isValid = false;
+       c_password.nextElementSibling.textContent = 'Confirm password is required.';
+     } else if (password.value !== c_password.value) {
+       isValid = false;
+       c_password.nextElementSibling.textContent = 'Passwords do not match.';
+     }
+ 
+     if (!isValid) {
+       event.preventDefault(); // Prevent form submission
+     }
   });
-
-
-
-
-function togglePassword(){
-  [...password].map((passwords) => passwords.type === "text" ? passwords.type = "password" :
-  passwords.type = "text"
-)}
-
-
-
-
-
-
+ });
+ 
