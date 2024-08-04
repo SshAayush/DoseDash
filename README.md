@@ -20,7 +20,7 @@ This project is a pharmacy eCommerce website built using Django and SQLite. It f
 
 ### Installation
 
-1. Clone the repository: git clone [https://github.com/yourusername/pharmacy-ecommerce.git](https://github.com/SshAayush/DoseDash.git)https://github.com/SshAayush/DoseDash.git
+1. Clone the repository: git clone (https://github.com/SshAayush/DoseDash.git)https://github.com/SshAayush/DoseDash.git
 2. Navigate to the project directory: cd DoseDash
 3. Install the environment(conda)
 4. Apply migrations to set up the database: python manage.py migrate
